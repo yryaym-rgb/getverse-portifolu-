@@ -5,11 +5,25 @@ import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import { 
-  ArrowLeft, Upload, Brain, CheckCircle, XCircle, 
-  Loader2, Sparkles, Target, FileText, 
-  AlertCircle, TrendingUp, Award, Zap,
-  Download, Eye, Send
+  ArrowLeft, Upload, Brain, CheckCircle, XCircle, Loader2, 
+  Sparkles, Target, FileText, AlertCircle, Award, TrendingUp, Users, Zap 
 } from 'lucide-react'
+
+interface MatchResult {
+  match: number
+  skills: string[]
+  projects: string[]
+  missing: string[]
+  summary: string
+  experienceMatch: string
+  cultureFit: string
+  recommendations: string[]
+  matchDetails: {
+    skillsMatch: number
+    experienceMatch: number
+    projectMatch: number
+  }
+}
 
 export default function JobMatcher() {
   const [file, setFile] = useState<File | null>(null)
@@ -17,66 +31,62 @@ export default function JobMatcher() {
   const [analyzing, setAnalyzing] = useState(false)
   const [jobDescription, setJobDescription] = useState('')
   const [inputMethod, setInputMethod] = useState<'upload' | 'paste'>('upload')
+  const [result, setResult] = useState<MatchResult | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  
-  const [result, setResult] = useState<null | { 
-    match: number
-    skills: string[]
-    projects: string[]
-    missing: string[]
-    summary: string
-    recommendations: string[]
-    experienceMatch: string
-    cultureFit: string
-  }>(null)
 
-  // Simulate AI analysis
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (inputMethod === 'upload' && !file) {
-      alert('Please upload a file first')
+      setError('Please upload a file first')
       return
     }
     if (inputMethod === 'paste' && !jobDescription.trim()) {
-      alert('Please paste a job description')
+      setError('Please paste a job description')
       return
     }
 
+    setError(null)
     setAnalyzing(true)
-    
-    // Simulate AI processing
-    setTimeout(() => {
-      setAnalyzing(false)
-      setUploaded(true)
-      setResult({
-        match: 96,
-        skills: ['Python', 'FastAPI', 'React', 'Next.js', 'Docker', 'AWS', 'PostgreSQL', 'AI/ML'],
-        projects: ['MAONI (Presidential Platform)', 'ARPTC Tower Map', 'Selzara AI SaaS'],
-        missing: ['Kubernetes', 'GraphQL'],
-        summary: 'Excellent match for senior engineering role with AI and government experience. Strong track record of delivering production systems at scale with 99.98% uptime.',
-        recommendations: [
-          'Consider adding Kubernetes to your skill set',
-          'GraphQL experience would expand your API capabilities',
-          'Your government experience is a major differentiator'
-        ],
-        experienceMatch: '4+ years of full-stack development with AI integration. Experience building national-scale platforms.',
-        cultureFit: 'Remote-first experience, cross-cultural communication, government-grade security mindset'
-      })
-    }, 3000)
-  }
+    setResult(null)
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
-    if (selectedFile) {
-      setFile(selectedFile)
-      setUploaded(false)
-      setResult(null)
+    try {
+      let jobText = ''
+      if (inputMethod === 'upload' && file) {
+        jobText = await file.text()
+      } else {
+        jobText = jobDescription
+      }
+
+      const response = await fetch('/api/job-matcher', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobDescription: jobText })
+      })
+      
+      const data = await response.json()
+      
+      if (data.error) {
+        throw new Error(data.error)
+      }
+      
+      if (data.result) {
+        setResult(data.result)
+        setUploaded(true)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to analyze job description')
+    } finally {
+      setAnalyzing(false)
     }
   }
 
-  const handlePaste = () => {
-    if (jobDescription.trim()) {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0]
+    if (selected) {
+      setFile(selected)
       setUploaded(false)
       setResult(null)
+      setError(null)
     }
   }
 
@@ -85,6 +95,7 @@ export default function JobMatcher() {
     setUploaded(false)
     setResult(null)
     setJobDescription('')
+    setError(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -93,35 +104,26 @@ export default function JobMatcher() {
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
-
-      <section className="pt-24 pb-20 px-4 max-w-5xl mx-auto">
-        {/* Back Button */}
-        <Link 
-          href="/ai-recruiter" 
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition mb-8 group"
-        >
+      
+      <section className="pt-24 pb-20 px-4 max-w-4xl mx-auto">
+        <Link href="/ai-recruiter" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition mb-8 group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition" />
           Back to AI Recruiter
         </Link>
 
-        {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/5 text-[#00f0ff] text-sm mb-4">
             <Target size={14} />
             AI Job Matcher
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold">
+          <h1 className="text-4xl font-bold">
             <span className="gradient-text">AI Match</span> Analyzer
           </h1>
-          <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-            Upload a job description or paste it below. AI will analyze and show you exactly how well I match.
-          </p>
+          <p className="text-gray-400 mt-2">Powered by Claude AI — Real-time job matching</p>
         </div>
 
-        {/* Input Section */}
-        <div className="glass p-8 rounded-3xl border border-white/5 mb-8">
-          {/* Toggle */}
-          <div className="flex gap-2 mb-6 bg-white/5 rounded-xl p-1 max-w-xs">
+        <div className="glass p-8 rounded-3xl border border-white/5">
+          <div className="flex gap-2 mb-4 bg-white/5 rounded-xl p-1 max-w-xs">
             <button
               onClick={() => setInputMethod('upload')}
               className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition ${
@@ -146,7 +148,6 @@ export default function JobMatcher() {
             </button>
           </div>
 
-          {/* Upload Area */}
           {inputMethod === 'upload' && (
             <div 
               className={`border-2 border-dashed rounded-2xl p-8 text-center transition cursor-pointer ${
@@ -171,37 +172,41 @@ export default function JobMatcher() {
               {file && (
                 <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00f0ff]/10 text-[#00f0ff] text-xs">
                   <CheckCircle size={12} />
-                  File ready for analysis
+                  File ready
                 </div>
               )}
             </div>
           )}
 
-          {/* Paste Area */}
           {inputMethod === 'paste' && (
             <div>
               <textarea
                 rows={6}
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                onBlur={handlePaste}
                 placeholder="Paste the job description here..."
                 className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-[#00f0ff] focus:outline-none transition resize-none"
               />
               {jobDescription && (
                 <div className="mt-2 flex items-center gap-2 text-emerald-400 text-sm">
                   <CheckCircle size={14} />
-                  Job description ready for analysis ({jobDescription.split(' ').length} words)
+                  Ready ({jobDescription.split(' ').length} words)
                 </div>
               )}
             </div>
           )}
 
-          {/* Analyze Button */}
+          {error && (
+            <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-2">
+              <AlertCircle size={18} className="text-red-400" />
+              <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
           <button
             onClick={handleAnalyze}
             disabled={analyzing || (!file && !jobDescription.trim())}
-            className="mt-6 w-full px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="mt-4 w-full px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {analyzing ? (
               <>
@@ -217,116 +222,110 @@ export default function JobMatcher() {
           </button>
         </div>
 
-        {/* Results */}
-        {result && !analyzing && (
-          <div className="space-y-6 animate-fadeIn">
-            {/* Match Score */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <div>
-                  <p className="text-gray-400 text-sm font-medium">Overall Match Score</p>
-                  <div className="flex items-center gap-4">
-                    <p className="text-5xl font-bold gradient-text">{result.match}%</p>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle size={20} className="text-emerald-400" />
-                      <span className="text-emerald-400 font-medium">Strong Match</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-[#00f0ff] transition flex items-center gap-2">
-                    <Download size={16} />
-                    Export
-                  </button>
-                  <Link 
-                    href="/contact" 
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg transition flex items-center gap-2"
-                  >
-                    <Send size={16} />
-                    Contact Abdul
-                  </Link>
+        {result && (
+          <div className="mt-6 space-y-4 animate-fadeIn">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+              <div>
+                <p className="text-gray-400 text-sm">Match Score</p>
+                <p className="text-3xl font-bold gradient-text">{result.match}%</p>
+              </div>
+              <div className="text-right">
+                <p className="text-gray-400 text-sm">Status</p>
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={18} className="text-emerald-400" />
+                  <span className="text-emerald-400 font-medium">AI Verified</span>
                 </div>
               </div>
             </div>
 
-            {/* Summary */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">AI Summary</h3>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="glass p-3 rounded-xl text-center border border-white/5">
+                <div className="text-lg font-bold text-[#00f0ff]">{result.matchDetails.skillsMatch}%</div>
+                <p className="text-gray-400 text-xs">Skills</p>
+              </div>
+              <div className="glass p-3 rounded-xl text-center border border-white/5">
+                <div className="text-lg font-bold text-[#7b2ffc]">{result.matchDetails.experienceMatch}%</div>
+                <p className="text-gray-400 text-xs">Experience</p>
+              </div>
+              <div className="glass p-3 rounded-xl text-center border border-white/5">
+                <div className="text-lg font-bold text-[#ff6b35]">{result.matchDetails.projectMatch}%</div>
+                <p className="text-gray-400 text-xs">Projects</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-white/5">
+              <p className="text-gray-400 text-sm mb-1">AI Summary</p>
               <p className="text-white">{result.summary}</p>
             </div>
 
-            {/* Skills Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="glass p-6 rounded-2xl border border-white/5">
-                <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <CheckCircle size={16} />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-white/5">
+                <p className="text-gray-400 text-sm mb-2 flex items-center gap-2">
+                  <CheckCircle size={14} className="text-emerald-400" />
                   Matching Skills
-                </h3>
-                <div className="flex flex-wrap gap-2">
+                </p>
+                <div className="flex flex-wrap gap-1.5">
                   {result.skills.map((skill, i) => (
-                    <span key={i} className="px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-sm font-medium">
+                    <span key={i} className="px-2.5 py-1 rounded-full bg-[#00f0ff]/10 text-[#00f0ff] text-xs font-medium">
                       {skill}
                     </span>
                   ))}
                 </div>
               </div>
+              <div className="p-4 rounded-xl bg-white/5">
+                <p className="text-gray-400 text-sm mb-2 flex items-center gap-2">
+                  <Award size={14} className="text-[#7b2ffc]" />
+                  Relevant Projects
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {result.projects.map((project, i) => (
+                    <span key={i} className="px-2.5 py-1 rounded-full bg-[#7b2ffc]/10 text-[#7b2ffc] text-xs font-medium">
+                      {project}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-              <div className="glass p-6 rounded-2xl border border-white/5">
-                <h3 className="text-sm font-bold text-yellow-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <AlertCircle size={16} />
+            {result.missing.length > 0 && (
+              <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                <p className="text-gray-400 text-sm mb-2 flex items-center gap-2">
+                  <AlertCircle size={14} className="text-yellow-400" />
                   Skills to Develop
-                </h3>
-                <div className="flex flex-wrap gap-2">
+                </p>
+                <div className="flex flex-wrap gap-1.5">
                   {result.missing.map((skill, i) => (
-                    <span key={i} className="px-3 py-1.5 rounded-full bg-yellow-500/10 text-yellow-400 text-sm font-medium">
+                    <span key={i} className="px-2.5 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-medium">
                       {skill}
                     </span>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Relevant Projects */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-[#7b2ffc] uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Award size={16} />
-                Relevant Projects
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {result.projects.map((project, i) => (
-                  <span key={i} className="px-4 py-2 rounded-xl bg-[#7b2ffc]/10 text-[#7b2ffc] text-sm font-medium">
-                    {project}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Experience & Culture */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="glass p-6 rounded-2xl border border-white/5">
-                <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <TrendingUp size={16} />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-white/5">
+                <p className="text-gray-400 text-sm mb-1 flex items-center gap-2">
+                  <TrendingUp size={14} className="text-[#00f0ff]" />
                   Experience Match
-                </h3>
-                <p className="text-gray-300 text-sm">{result.experienceMatch}</p>
+                </p>
+                <p className="text-white text-sm">{result.experienceMatch}</p>
               </div>
-
-              <div className="glass p-6 rounded-2xl border border-white/5">
-                <h3 className="text-sm font-bold text-[#ff6b35] uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <Sparkles size={16} />
+              <div className="p-4 rounded-xl bg-white/5">
+                <p className="text-gray-400 text-sm mb-1 flex items-center gap-2">
+                  <Users size={14} className="text-[#7b2ffc]" />
                   Culture Fit
-                </h3>
-                <p className="text-gray-300 text-sm">{result.cultureFit}</p>
+                </p>
+                <p className="text-white text-sm">{result.cultureFit}</p>
               </div>
             </div>
 
-            {/* Recommendations */}
-            <div className="glass p-6 rounded-2xl border border-[#00f0ff]/20 bg-[#00f0ff]/5">
-              <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Zap size={16} />
+            <div className="p-4 rounded-xl bg-[#00f0ff]/5 border border-[#00f0ff]/20">
+              <p className="text-gray-400 text-sm mb-2 flex items-center gap-2">
+                <Zap size={14} className="text-[#00f0ff]" />
                 AI Recommendations
-              </h3>
-              <ul className="space-y-2">
+              </p>
+              <ul className="space-y-1">
                 {result.recommendations.map((rec, i) => (
                   <li key={i} className="flex items-start gap-2 text-gray-300 text-sm">
                     <span className="text-[#00f0ff] font-bold">•</span>
@@ -336,40 +335,19 @@ export default function JobMatcher() {
               </ul>
             </div>
 
-            {/* Reset */}
-            <div className="text-center">
-              <button
-                onClick={resetAll}
-                className="text-gray-400 hover:text-white transition text-sm"
-              >
-                ← Start Over
+            <div className="flex gap-4">
+              <Link href="/contact" className="flex-1 text-center px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg transition">
+                Contact Abdul
+              </Link>
+              <button onClick={resetAll} className="px-6 py-3 rounded-xl border border-gray-700 text-white hover:border-[#00f0ff] transition">
+                Try Another
               </button>
             </div>
-          </div>
-        )}
-
-        {/* No Results State */}
-        {!result && !analyzing && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <p className="text-gray-400">Upload a job description or paste it above to get started</p>
-            <p className="text-gray-500 text-sm mt-1">AI will analyze and show you the match score</p>
           </div>
         )}
       </section>
 
       <Footer />
-
-      {/* Animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-      `}</style>
     </main>
   )
 }

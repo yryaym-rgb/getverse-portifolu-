@@ -3,13 +3,7 @@
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
-import { 
-  Server, Database, Cloud, Code, Shield, 
-  GitBranch, Terminal, ArrowRight, Sparkles,
-  Cpu, Network, Layers, Box, Zap,
-  BarChart3, Lock, Eye, Activity,
-  HardDrive, Globe, Settings, Wrench
-} from 'lucide-react'
+import { Server, Database, Cloud, Code, Shield, GitBranch, Terminal, ArrowRight, Sparkles, Cpu, Network, Layers, Box, Zap, BarChart3, Lock, Eye, Activity, HardDrive, Globe, Settings, Wrench } from 'lucide-react'
 
 interface EngineeringTool {
   icon: React.ReactNode

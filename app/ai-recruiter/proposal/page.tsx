@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
-import {
+import { 
   ArrowLeft, Sparkles, Send, Loader2, CheckCircle,
-  FileText, Clock, Users, DollarSign, Download,
-  Printer, Share2, Calendar, Briefcase, Zap,
-  Shield, Brain, Server, Database, Cloud,
-  Code, GitBranch, Terminal, Eye, Copy
+  FileText, Clock, Users, DollarSign, ArrowRight,
+  AlertCircle, Download, Printer, Share2,
+  Calendar, Briefcase, Zap, Shield, Brain,
+  Server, Database, Cloud, Code
 } from 'lucide-react'
 
 export default function ProposalGenerator() {
@@ -18,19 +18,8 @@ export default function ProposalGenerator() {
   const [budget, setBudget] = useState('')
   const [timeline, setTimeline] = useState('')
   const [generating, setGenerating] = useState(false)
-  const [result, setResult] = useState<null | {
-    title: string
-    solution: string
-    architecture: string
-    timeline: string
-    tech: string[]
-    cost: string
-    team: string
-    risks: string[]
-    deliverables: string[]
-    timelineDetails: string[]
-    summary: string
-  }>(null)
+  const [result, setResult] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const industries = [
     { value: 'government', label: '🏛️ Government / Public Sector' },
@@ -59,54 +48,42 @@ export default function ProposalGenerator() {
     { value: '12-16', label: '12-16 weeks' },
   ]
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!project || !industry || !budget) {
-      alert('Please fill in all required fields')
+      setError('Please fill in all required fields')
       return
     }
 
+    setError(null)
     setGenerating(true)
-    
-    // Simulate AI generation
-    setTimeout(() => {
-      setGenerating(false)
-      
-      const industryLabel = industries.find(i => i.value === industry)?.label || ''
-      const budgetLabel = budgets.find(b => b.value === budget)?.label || ''
-      const timelineLabel = timelines.find(t => t.value === timeline)?.label || '8-12 weeks'
+    setResult(null)
 
-      setResult({
-        title: `${project} — Complete Solution Proposal`,
-        solution: `A full-stack platform with AI-powered capabilities, real-time analytics, and secure user management. Designed for ${industryLabel}, this solution will handle high traffic with auto-scaling infrastructure and military-grade security.`,
-        architecture: 'Next.js Frontend → FastAPI Backend (Python) → PostgreSQL Database → Redis Cache → Claude API for AI → Docker + Nginx Deployment → AWS Cloud Infrastructure',
-        timeline: timelineLabel || '8-12 weeks',
-        tech: ['React', 'Next.js', 'FastAPI', 'PostgreSQL', 'Redis', 'Claude API', 'Docker', 'Nginx', 'AWS', 'TypeScript'],
-        cost: budgetLabel,
-        team: '1 Full Stack Developer (Abdul Malik) + QA Specialist + Project Manager (as needed)',
-        risks: [
-          'AI model accuracy requires ongoing tuning and validation',
-          'Third-party API rate limits may impact performance during peak usage',
-          'Data migration complexity from legacy systems',
-          'Integration with existing infrastructure'
-        ],
-        deliverables: [
-          'Complete full-stack platform with AI integration',
-          'Admin dashboard with analytics and reporting',
-          'REST API with comprehensive documentation',
-          'Database schema and migrations',
-          'Docker containerization and deployment scripts',
-          'CI/CD pipeline with GitHub Actions',
-          '30-day post-launch support and maintenance'
-        ],
-        timelineDetails: [
-          'Week 1-2: Requirements gathering, research, and architecture design',
-          'Week 3-6: Core development, frontend and backend implementation',
-          'Week 7-8: AI integration, testing, and quality assurance',
-          'Week 9-10: Deployment, security audit, and performance optimization'
-        ],
-        summary: `This proposal outlines a comprehensive ${project} solution tailored to ${industryLabel} requirements. With a budget of ${budgetLabel} and timeline of ${timelineLabel}, the project will deliver a production-ready platform with AI capabilities, security, and scalability.`
+    try {
+      const response = await fetch('/api/proposal-generator', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          project, 
+          industry, 
+          budget,
+          timeline 
+        })
       })
-    }, 2500)
+      
+      const data = await response.json()
+      
+      if (data.error) {
+        throw new Error(data.error)
+      }
+      
+      if (data.proposal) {
+        setResult(data.proposal)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to generate proposal')
+    } finally {
+      setGenerating(false)
+    }
   }
 
   const handleReset = () => {
@@ -115,55 +92,44 @@ export default function ProposalGenerator() {
     setIndustry('')
     setBudget('')
     setTimeline('')
+    setError(null)
   }
 
-  const handleExport = () => {
-    if (!result) return
-    // Simulate export
-    alert('Exporting proposal as PDF... (Feature coming soon)')
-  }
+  const isFormValid = project && industry && budget
 
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
-
-      <section className="pt-24 pb-20 px-4 max-w-5xl mx-auto">
-        {/* Back Button */}
-        <Link 
-          href="/ai-recruiter" 
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition mb-8 group"
-        >
+      
+      <section className="pt-24 pb-20 px-4 max-w-4xl mx-auto">
+        <Link href="/ai-recruiter" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition mb-8 group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition" />
           Back to AI Recruiter
         </Link>
 
-        {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/5 text-[#00f0ff] text-sm mb-4">
             <FileText size={14} />
             AI Proposal Generator
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold">
+          <h1 className="text-4xl font-bold">
             <span className="gradient-text">AI</span> Proposal Generator
           </h1>
-          <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-            Describe your project and get a complete solution proposal with architecture, timeline, and cost estimate.
-          </p>
+          <p className="text-gray-400 mt-2">Powered by Claude AI — Real-time professional proposals</p>
         </div>
 
-        {/* Input Form */}
         {!result && (
           <div className="glass p-8 rounded-3xl border border-white/5">
-            <div className="space-y-5">
+            <div className="space-y-4">
               <div>
                 <label className="text-gray-300 text-sm font-medium block mb-2">
-                  Project Name / Description <span className="text-red-400">*</span>
+                  Project Description <span className="text-red-400">*</span>
                 </label>
                 <textarea
                   rows={3}
                   value={project}
                   onChange={(e) => setProject(e.target.value)}
-                  placeholder="E.g., 'Hospital Management System with patient records, appointments, billing, and AI-powered diagnostics'"
+                  placeholder="Describe what you want to build..."
                   className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-[#00f0ff] focus:outline-none transition resize-none"
                 />
               </div>
@@ -204,7 +170,7 @@ export default function ProposalGenerator() {
 
               <div>
                 <label className="text-gray-300 text-sm font-medium block mb-2">
-                  Desired Timeline
+                  Desired Timeline (Optional)
                 </label>
                 <select
                   value={timeline}
@@ -218,15 +184,22 @@ export default function ProposalGenerator() {
                 </select>
               </div>
 
+              {error && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-2">
+                  <AlertCircle size={18} className="text-red-400" />
+                  <p className="text-red-400 text-sm">{error}</p>
+                </div>
+              )}
+
               <button
                 onClick={handleGenerate}
-                disabled={generating}
+                disabled={generating || !isFormValid}
                 className="w-full px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {generating ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
-                    Generating Proposal...
+                    AI Generating Proposal...
                   </>
                 ) : (
                   <>
@@ -239,20 +212,15 @@ export default function ProposalGenerator() {
           </div>
         )}
 
-        {/* Results */}
         {result && (
-          <div className="space-y-6 animate-fadeIn">
-            {/* Header */}
+          <div className="space-y-4 animate-fadeIn">
             <div className="flex items-start justify-between flex-wrap gap-4">
               <div>
                 <h2 className="text-2xl font-bold text-white">{result.title}</h2>
-                <p className="text-gray-400 text-sm mt-1">Generated by AI • Real-time proposal</p>
+                <p className="text-gray-400 text-sm mt-1">Generated by Claude AI • Professional Proposal</p>
               </div>
               <div className="flex gap-2">
-                <button
-                  onClick={handleExport}
-                  className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-[#00f0ff] transition flex items-center gap-2"
-                >
+                <button className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-[#00f0ff] transition flex items-center gap-2">
                   <Download size={16} />
                   Export
                 </button>
@@ -266,55 +234,50 @@ export default function ProposalGenerator() {
               </div>
             </div>
 
-            {/* Summary */}
-            <div className="glass p-6 rounded-2xl border border-[#00f0ff]/10 bg-[#00f0ff]/5">
+            <div className="p-4 rounded-xl bg-[#00f0ff]/5 border border-[#00f0ff]/10">
               <p className="text-gray-300 text-sm leading-relaxed">{result.summary}</p>
             </div>
 
-            {/* Solution */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider mb-2 flex items-center gap-2">
+            <div className="glass p-4 rounded-xl border border-white/5">
+              <h4 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider mb-2 flex items-center gap-2">
                 <Brain size={16} />
                 Solution Overview
-              </h3>
+              </h4>
               <p className="text-white">{result.solution}</p>
             </div>
 
-            {/* Architecture */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-[#7b2ffc] uppercase tracking-wider mb-2 flex items-center gap-2">
+            <div className="glass p-4 rounded-xl border border-white/5">
+              <h4 className="text-sm font-bold text-[#7b2ffc] uppercase tracking-wider mb-2 flex items-center gap-2">
                 <Server size={16} />
                 Architecture
-              </h3>
+              </h4>
               <p className="text-white font-mono text-sm">{result.architecture}</p>
             </div>
 
-            {/* Timeline & Cost */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="glass p-6 rounded-2xl border border-white/5">
-                <h3 className="text-sm font-bold text-[#ff6b35] uppercase tracking-wider mb-2 flex items-center gap-2">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="glass p-4 rounded-xl border border-white/5">
+                <h4 className="text-sm font-bold text-[#ff6b35] uppercase tracking-wider mb-2 flex items-center gap-2">
                   <Clock size={16} />
                   Timeline
-                </h3>
+                </h4>
                 <p className="text-white text-lg font-semibold">{result.timeline}</p>
               </div>
-              <div className="glass p-6 rounded-2xl border border-white/5">
-                <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+              <div className="glass p-4 rounded-xl border border-white/5">
+                <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                   <DollarSign size={16} />
                   Estimated Cost
-                </h3>
+                </h4>
                 <p className="text-white text-lg font-semibold">{result.cost}</p>
               </div>
             </div>
 
-            {/* Tech Stack */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div className="glass p-4 rounded-xl border border-white/5">
+              <h4 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Code size={16} />
                 Tech Stack
-              </h3>
+              </h4>
               <div className="flex flex-wrap gap-2">
-                {result.tech.map((t, i) => (
+                {result.tech.map((t: string, i: number) => (
                   <span key={i} className="px-3 py-1.5 rounded-full bg-[#00f0ff]/10 text-[#00f0ff] text-sm font-medium">
                     {t}
                   </span>
@@ -322,30 +285,28 @@ export default function ProposalGenerator() {
               </div>
             </div>
 
-            {/* Deliverables */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div className="glass p-4 rounded-xl border border-white/5">
+              <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                 <CheckCircle size={16} />
                 Deliverables
-              </h3>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {result.deliverables.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-gray-300 text-sm">
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {result.deliverables.map((item: string, i: number) => (
+                  <div key={i} className="flex items-start gap-2 text-gray-300 text-sm">
                     <span className="text-emerald-400 mt-0.5">✓</span>
                     {item}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
-            {/* Timeline Details */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-[#7b2ffc] uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div className="glass p-4 rounded-xl border border-white/5">
+              <h4 className="text-sm font-bold text-[#7b2ffc] uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Calendar size={16} />
                 Phase Timeline
-              </h3>
-              <ul className="space-y-2">
-                {result.timelineDetails.map((item, i) => (
+              </h4>
+              <ul className="space-y-1">
+                {result.timelineDetails.map((item: string, i: number) => (
                   <li key={i} className="flex items-start gap-2 text-gray-300 text-sm">
                     <span className="text-[#7b2ffc] font-bold">•</span>
                     {item}
@@ -354,14 +315,13 @@ export default function ProposalGenerator() {
               </ul>
             </div>
 
-            {/* Risks */}
-            <div className="glass p-6 rounded-2xl border border-yellow-500/20 bg-yellow-500/5">
-              <h3 className="text-sm font-bold text-yellow-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div className="glass p-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5">
+              <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Shield size={16} />
                 Key Risks & Mitigations
-              </h3>
-              <ul className="space-y-2">
-                {result.risks.map((risk, i) => (
+              </h4>
+              <ul className="space-y-1">
+                {result.risks.map((risk: string, i: number) => (
                   <li key={i} className="flex items-start gap-2 text-gray-300 text-sm">
                     <span className="text-yellow-400">⚠️</span>
                     {risk}
@@ -370,27 +330,22 @@ export default function ProposalGenerator() {
               </ul>
             </div>
 
-            {/* Team */}
-            <div className="glass p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-bold text-[#7b2ffc] uppercase tracking-wider mb-2 flex items-center gap-2">
+            <div className="glass p-4 rounded-xl border border-white/5">
+              <h4 className="text-sm font-bold text-[#7b2ffc] uppercase tracking-wider mb-2 flex items-center gap-2">
                 <Users size={16} />
                 Team
-              </h3>
-              <p className="text-white">{result.team}</p>
+              </h4>
+              <p className="text-white text-sm">{result.team}</p>
             </div>
 
-            {/* CTA */}
-            <div className="flex flex-wrap gap-4 pt-4">
-              <Link 
-                href="/contact" 
-                className="flex-1 text-center px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition flex items-center justify-center gap-2"
-              >
+            <div className="flex flex-wrap gap-4">
+              <Link href="/contact" className="flex-1 text-center px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition flex items-center justify-center gap-2">
                 <Send size={18} />
                 Discuss This Proposal
               </Link>
               <button
                 onClick={handleReset}
-                className="px-6 py-3 rounded-xl border border-gray-700 text-white hover:border-[#00f0ff] hover:bg-[#00f0ff]/5 transition flex items-center gap-2"
+                className="px-6 py-3 rounded-xl border border-gray-700 text-white hover:border-[#00f0ff] transition flex items-center gap-2"
               >
                 <Sparkles size={18} />
                 Generate Another
@@ -401,16 +356,6 @@ export default function ProposalGenerator() {
       </section>
 
       <Footer />
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-      `}</style>
     </main>
   )
 }

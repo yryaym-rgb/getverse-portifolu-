@@ -8,36 +8,16 @@ import {
   ArrowLeft, Upload, Loader2, CheckCircle, 
   AlertTriangle, Shield, Zap, Code, Brain,
   Sparkles, XCircle, Clock, GitBranch,
-  Download, Copy, Eye, Terminal
+  Download, Copy, Eye, Terminal,
+  AlertCircle
 } from 'lucide-react'
 
 export default function CodeReview() {
   const [code, setCode] = useState('')
   const [language, setLanguage] = useState('javascript')
   const [analyzing, setAnalyzing] = useState(false)
-  const [result, setResult] = useState<null | {
-    summary: string
-    score: number
-    issues: Array<{
-      severity: 'critical' | 'high' | 'medium' | 'low'
-      category: 'security' | 'performance' | 'readability' | 'maintainability' | 'bug' | 'best-practice'
-      title: string
-      description: string
-      line?: string
-      suggestion: string
-    }>
-    strengths: string[]
-    improvements: string[]
-    securityScan: {
-      vulnerabilities: string[]
-      riskLevel: 'low' | 'medium' | 'high' | 'critical'
-    }
-    performance: {
-      rating: 'poor' | 'average' | 'good' | 'excellent'
-      bottlenecks: string[]
-    }
-  }>(null)
-
+  const [result, setResult] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
   const [selectedIssue, setSelectedIssue] = useState<number | null>(null)
 
   const languages = [
@@ -55,85 +35,36 @@ export default function CodeReview() {
 
   const handleAnalyze = async () => {
     if (!code.trim()) {
-      alert('Please paste some code to review')
+      setError('Please paste some code to review')
       return
     }
 
+    setError(null)
     setAnalyzing(true)
     setResult(null)
 
     try {
-      const response = await fetch('/api/code-review', {
+      const response = await fetch('/api/code-reviewer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, language })
       })
-
+      
       const data = await response.json()
-      setResult(data.review || generateFallbackReview())
-    } catch (error) {
-      console.error('Error:', error)
-      setResult(generateFallbackReview())
+      
+      if (data.error) {
+        throw new Error(data.error)
+      }
+      
+      if (data.review) {
+        setResult(data.review)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to review code')
     } finally {
       setAnalyzing(false)
     }
   }
-
-  const generateFallbackReview = () => ({
-    summary: 'AI review completed. Here\'s a detailed analysis of your code.',
-    score: 72,
-    issues: [
-      {
-        severity: 'high' as const,
-        category: 'security' as const,
-        title: 'Potential SQL Injection Risk',
-        description: 'User input is not properly sanitized before being used in database queries.',
-        line: 'Line 42',
-        suggestion: 'Use parameterized queries or an ORM to prevent SQL injection attacks.'
-      },
-      {
-        severity: 'medium' as const,
-        category: 'performance' as const,
-        title: 'Inefficient Loop',
-        description: 'Nested loop with O(n²) complexity could be optimized.',
-        line: 'Line 28-35',
-        suggestion: 'Consider using a Map or Set for O(1) lookups.'
-      },
-      {
-        severity: 'low' as const,
-        category: 'readability' as const,
-        title: 'Magic Numbers',
-        description: 'Hard-coded numbers without explanation.',
-        line: 'Line 15, 23',
-        suggestion: 'Use named constants to improve code readability and maintainability.'
-      }
-    ],
-    strengths: [
-      'Good function decomposition',
-      'Clean variable naming conventions',
-      'Proper error handling in critical paths'
-    ],
-    improvements: [
-      'Add more comprehensive error handling',
-      'Implement caching for frequently accessed data',
-      'Consider adding unit tests'
-    ],
-    securityScan: {
-      vulnerabilities: [
-        'Potential SQL injection (High)',
-        'Missing input validation (Medium)',
-        'Sensitive data in logs (Low)'
-      ],
-      riskLevel: 'medium' as const
-    },
-    performance: {
-      rating: 'good' as const,
-      bottlenecks: [
-        'Nested loop on line 28-35',
-        'Inefficient database queries in user service'
-      ]
-    }
-  })
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -161,13 +92,11 @@ export default function CodeReview() {
       <Navigation />
 
       <section className="pt-24 pb-20 px-4 max-w-5xl mx-auto">
-        {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition mb-8 group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition" />
           Back to Home
         </Link>
 
-        {/* Header */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/5 text-[#00f0ff] text-sm mb-4">
             <Shield size={14} />
@@ -177,12 +106,11 @@ export default function CodeReview() {
             <span className="gradient-text">AI</span> Code Review
           </h1>
           <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-            Paste your code for AI-powered review with security audit, bug detection, and optimization suggestions.
+            Powered by Claude AI — Paste your code for AI-powered review with security audit, bug detection, and optimization suggestions.
           </p>
         </div>
 
-        {/* Input Section */}
-        <div className="glass p-6 rounded-3xl border border-white/5 mb-8">
+        <div className="glass p-6 rounded-2xl border border-white/5 mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <div className="flex-1">
               <label className="text-gray-300 text-sm font-medium block mb-2">
@@ -207,7 +135,7 @@ export default function CodeReview() {
                 {analyzing ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
-                    Analyzing...
+                    AI Analyzing...
                   </>
                 ) : (
                   <>
@@ -231,12 +159,17 @@ export default function CodeReview() {
               className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white font-mono text-sm placeholder-gray-500 focus:border-[#00f0ff] focus:outline-none transition resize-none"
             />
           </div>
+
+          {error && (
+            <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-2">
+              <AlertCircle size={18} className="text-red-400" />
+              <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
         </div>
 
-        {/* Results */}
         {result && !analyzing && (
           <div className="space-y-6 animate-fadeIn">
-            {/* Score */}
             <div className="flex items-center justify-between p-6 rounded-2xl bg-white/5 border border-white/5">
               <div>
                 <p className="text-gray-400 text-sm">Code Quality Score</p>
@@ -262,19 +195,17 @@ export default function CodeReview() {
               </div>
             </div>
 
-            {/* Summary */}
             <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-              <p className="text-gray-400 text-sm mb-1">Summary</p>
+              <p className="text-gray-400 text-sm mb-1">AI Summary</p>
               <p className="text-white">{result.summary}</p>
             </div>
 
-            {/* Issues */}
             <div className="space-y-3">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <AlertTriangle size={18} className="text-yellow-400" />
                 Issues Found ({result.issues.length})
               </h3>
-              {result.issues.map((issue, i) => (
+              {result.issues.map((issue: any, i: number) => (
                 <div 
                   key={i}
                   className={`p-4 rounded-xl border ${getSeverityColor(issue.severity)} bg-opacity-5 cursor-pointer transition hover:scale-[1.01]`}
@@ -308,13 +239,12 @@ export default function CodeReview() {
               ))}
             </div>
 
-            {/* Strengths & Improvements */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                 <h4 className="text-emerald-400 font-medium flex items-center gap-2 mb-2">
                   <CheckCircle size={16} /> Strengths
                 </h4>
-                {result.strengths.map((item, i) => (
+                {result.strengths.map((item: string, i: number) => (
                   <p key={i} className="text-gray-300 text-sm">• {item}</p>
                 ))}
               </div>
@@ -322,13 +252,12 @@ export default function CodeReview() {
                 <h4 className="text-blue-400 font-medium flex items-center gap-2 mb-2">
                   <Zap size={16} /> Improvements
                 </h4>
-                {result.improvements.map((item, i) => (
+                {result.improvements.map((item: string, i: number) => (
                   <p key={i} className="text-gray-300 text-sm">• {item}</p>
                 ))}
               </div>
             </div>
 
-            {/* Security & Performance */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
                 <h4 className="text-red-400 font-medium flex items-center gap-2 mb-2">
@@ -344,7 +273,7 @@ export default function CodeReview() {
                     {result.securityScan.riskLevel.toUpperCase()}
                   </span>
                 </p>
-                {result.securityScan.vulnerabilities.map((vuln, i) => (
+                {result.securityScan.vulnerabilities.map((vuln: string, i: number) => (
                   <p key={i} className="text-gray-300 text-sm">• {vuln}</p>
                 ))}
               </div>
@@ -362,22 +291,18 @@ export default function CodeReview() {
                     {result.performance.rating.toUpperCase()}
                   </span>
                 </p>
-                {result.performance.bottlenecks.map((bottleneck, i) => (
+                {result.performance.bottlenecks.map((bottleneck: string, i: number) => (
                   <p key={i} className="text-gray-300 text-sm">• {bottleneck}</p>
                 ))}
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex flex-wrap gap-4">
-              <Link 
-                href="/contact" 
-                className="flex-1 text-center px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg transition flex items-center justify-center gap-2"
-              >
+              <Link href="/contact" className="flex-1 text-center px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg transition flex items-center justify-center gap-2">
                 Discuss with Abdul <ArrowLeft size={18} className="rotate-180" />
               </Link>
               <button
-                onClick={() => { setCode(''); setResult(null) }}
+                onClick={() => { setCode(''); setResult(null); setError(null) }}
                 className="px-6 py-3 rounded-xl border border-gray-700 text-white hover:border-[#00f0ff] transition flex items-center gap-2"
               >
                 <Sparkles size={18} />
@@ -387,8 +312,7 @@ export default function CodeReview() {
           </div>
         )}
 
-        {/* No Results State */}
-        {!result && !analyzing && (
+        {!result && !analyzing && !error && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🔍</div>
             <p className="text-gray-400">Paste your code above and click "Review Code"</p>
@@ -398,16 +322,6 @@ export default function CodeReview() {
       </section>
 
       <Footer />
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-      `}</style>
     </main>
   )
 }
