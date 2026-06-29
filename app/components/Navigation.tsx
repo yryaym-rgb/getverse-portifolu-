@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Command, Github, Linkedin, Brain, Server, Users, Code, Home, Sparkles, FileText, FlaskRound } from 'lucide-react'
+import { Menu, X, Command, Github, Linkedin, Brain, Server, Users, Code, Home, Sparkles, FileText, FlaskConical } from 'lucide-react'
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
@@ -36,7 +36,7 @@ export default function Navigation() {
     { label: 'AI Recruiter', href: '/ai-recruiter', icon: <Users size={16} /> },
     { label: 'Engineering', href: '/engineering', icon: <Server size={16} /> },
     { label: 'Digital Twin', href: '/digital-twin', icon: <Brain size={16} /> },
-    { label: 'AI Lab', href: '/lab', icon: <FlaskRound size={16} /> },
+    { label: 'AI Lab', href: '/lab', icon: <FlaskConical size={16} /> },
   ]
 
   const isActive = (href: string) => {
