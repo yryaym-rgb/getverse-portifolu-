@@ -29,6 +29,7 @@ export default function CommandCenterStats() {
   })
   const sectionRef = useRef<HTMLDivElement>(null)
 
+  // ✅ REAL STATS ONLY — No fabricated metrics
   const stats: StatItem[] = [
     {
       icon: <Award size={24} />,
@@ -65,10 +66,10 @@ export default function CommandCenterStats() {
     {
       icon: <TrendingUp size={24} />,
       value: 457,
-      label: 'Daily Visitors',
+      label: 'Daily Visitors (Selzara)',
       suffix: '',
       color: '#7b2ffc',
-      description: 'Selzara organic'
+      description: 'Organic traffic'
     },
     {
       icon: <Shield size={24} />,
@@ -96,7 +97,6 @@ export default function CommandCenterStats() {
     }
   ]
 
-  // Intersection Observer for animation trigger
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -114,7 +114,6 @@ export default function CommandCenterStats() {
     return () => observer.disconnect()
   }, [])
 
-  // Animated counter
   useEffect(() => {
     if (!isVisible) return
 
@@ -185,7 +184,6 @@ export default function CommandCenterStats() {
   return (
     <section ref={sectionRef} className="py-16 px-4 border-t border-white/5 bg-gradient-to-b from-transparent to-[#00f0ff]/[0.02]">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/5 text-[#00f0ff] text-sm mb-4">
             <TrendingUp size={14} />
@@ -199,38 +197,31 @@ export default function CommandCenterStats() {
           </p>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
             <div
               key={index}
               className="group relative p-5 rounded-2xl bg-white/5 border border-white/5 hover:border-[#00f0ff]/20 hover:bg-white/10 transition-all hover:scale-105 overflow-hidden"
             >
-              {/* Background Glow */}
               <div 
                 className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"
                 style={{ background: `radial-gradient(circle at center, ${stat.color}33, transparent 70%)` }}
               />
 
-              {/* Icon */}
               <div className="flex justify-center mb-3 group-hover:scale-110 transition" style={{ color: stat.color }}>
                 {stat.icon}
               </div>
 
-              {/* Value */}
               <div className="text-3xl font-bold text-center" style={{ color: stat.color }}>
                 {displayValues[statKeys[index] as keyof typeof displayValues]}
               </div>
 
-              {/* Label */}
               <p className="text-white text-sm font-medium text-center mt-1">{stat.label}</p>
 
-              {/* Description */}
               {stat.description && (
                 <p className="text-gray-400 text-xs text-center mt-0.5">{stat.description}</p>
               )}
 
-              {/* Progress Bar */}
               <div className="mt-3 h-0.5 w-full bg-white/5 rounded-full overflow-hidden">
                 <div 
                   className="h-full rounded-full transition-all duration-1000"
@@ -244,7 +235,6 @@ export default function CommandCenterStats() {
           ))}
         </div>
 
-        {/* Trust Note */}
         <div className="mt-8 p-4 rounded-xl bg-white/5 border border-white/5 text-center">
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
             <span className="flex items-center gap-2 text-gray-400">

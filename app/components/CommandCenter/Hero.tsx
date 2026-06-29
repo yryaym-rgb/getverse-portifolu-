@@ -40,7 +40,6 @@ export default function CommandCenterHero() {
     { icon: <Terminal size={14} />, label: 'Docker', color: '#ff6b35' },
   ]
 
-  // Typing effect
   useEffect(() => {
     const current = titles[textIndex]
     const speed = isDeleting ? 30 : 60
@@ -63,7 +62,6 @@ export default function CommandCenterHero() {
     return () => clearTimeout(timer)
   }, [displayText, isDeleting, textIndex])
 
-  // Visibility animation
   useEffect(() => {
     setIsVisible(true)
   }, [])
@@ -82,30 +80,29 @@ export default function CommandCenterHero() {
         <div className={`space-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/5 text-[#00f0ff] text-sm">
-            <span className="w-2 h-2 bg-[#00f0ff] rounded-full " />
+            <span className="w-2 h-2 bg-[#00f0ff] rounded-full animate-pulse" />
             Available for Immediate Hire
             <span className="w-1 h-1 bg-[#00f0ff]/30 rounded-full" />
             <span className="text-[#00f0ff]/70">4+ Years Experience</span>
           </div>
 
-          {/* Title */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
             <span className="text-white">I'm </span>
             <span className="gradient-text">Abdul Malik</span>
           </h1>
 
-          {/* Typing Animation */}
           <div className="text-2xl md:text-3xl lg:text-4xl font-bold h-16">
             <span className="gradient-text">{displayText}</span>
-            <span className="text-[#00f0ff] ">|</span>
+            <span className="text-[#00f0ff] animate-pulse">|</span>
           </div>
 
-          {/* Description */}
+          {/* ✅ FIXED: Updated Trust Text */}
           <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
             Building <span className="text-[#00f0ff] font-semibold">mission-critical AI systems</span> for 
-            governments & enterprises. Trusted by the{' '}
-            <span className="text-white font-semibold">DRC Presidential Office</span> and{' '}
-            <span className="text-white font-semibold">national telecom regulators</span>.
+            governments & enterprises. Sole architect of a national civic platform built for the{' '}
+            <span className="text-white font-semibold">DRC presidential office's constitutional reform initiative</span>, 
+            and a national tower-mapping system for{' '}
+            <span className="text-white font-semibold">ARPTC, DRC's telecom regulator</span>.
           </p>
 
           {/* Stats */}
@@ -118,7 +115,6 @@ export default function CommandCenterHero() {
             ))}
           </div>
 
-          {/* Tech Stack Icons */}
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-xs text-gray-500">Tech:</span>
             {techIcons.map((tech, i) => (
@@ -129,7 +125,6 @@ export default function CommandCenterHero() {
             ))}
           </div>
 
-          {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4">
             <Link href="/projects" className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition-all hover:scale-105 flex items-center gap-2">
               <Sparkles size={18} />
@@ -144,26 +139,14 @@ export default function CommandCenterHero() {
             </Link>
           </div>
 
-          {/* Social Links */}
           <div className="flex items-center gap-6">
-            <a 
-              href="https://github.com/lakho0543-spec" 
-              target="_blank" 
-              className="text-gray-400 hover:text-white transition p-2 rounded-xl border border-white/5 hover:border-[#00f0ff]/30"
-            >
+            <a href="https://github.com/lakho0543-spec" target="_blank" className="text-gray-400 hover:text-white transition p-2 rounded-xl border border-white/5 hover:border-[#00f0ff]/30">
               <Github size={22} />
             </a>
-            <a 
-              href="https://linkedin.com/in/abdul-malik-lakho-19103b292" 
-              target="_blank" 
-              className="text-gray-400 hover:text-white transition p-2 rounded-xl border border-white/5 hover:border-[#00f0ff]/30"
-            >
+            <a href="https://linkedin.com/in/abdul-malik-lakho-19103b292" target="_blank" className="text-gray-400 hover:text-white transition p-2 rounded-xl border border-white/5 hover:border-[#00f0ff]/30">
               <Linkedin size={22} />
             </a>
-            <a 
-              href="mailto:lakho0543@gmail.com" 
-              className="text-gray-400 hover:text-white transition p-2 rounded-xl border border-white/5 hover:border-[#00f0ff]/30"
-            >
+            <a href="mailto:lakho0543@gmail.com" className="text-gray-400 hover:text-white transition p-2 rounded-xl border border-white/5 hover:border-[#00f0ff]/30">
               <Mail size={22} />
             </a>
             <span className="text-gray-600">|</span>
@@ -177,11 +160,9 @@ export default function CommandCenterHero() {
         {/* Right — Profile Photo */}
         <div className={`flex justify-center lg:justify-end transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
           <div className="relative group">
-            {/* Glow Effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] rounded-3xl  group-hover:opacity-40 transition duration-500" />
-            <div className="absolute -inset-3 bg-gradient-to-r from-[#00f0ff]/20 to-[#7b2ffc]/20 rounded-3xl  group-hover:opacity-30 transition duration-500" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] rounded-3xl opacity-20 group-hover:opacity-40 transition duration-500" />
+            <div className="absolute -inset-3 bg-gradient-to-r from-[#00f0ff]/20 to-[#7b2ffc]/20 rounded-3xl opacity-0 group-hover:opacity-30 transition duration-500" />
             
-            {/* Photo Container */}
             <div className="relative w-72 h-96 md:w-96 md:h-[450px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
               <Image
                 src="/images/hero/profile.jpg"
@@ -192,10 +173,8 @@ export default function CommandCenterHero() {
                 priority
               />
               
-              {/* Overlay Gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               
-              {/* Bottom Info */}
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <div className="flex items-center gap-2">
                   <Award size={18} className="text-[#00f0ff]" />
@@ -220,8 +199,7 @@ export default function CommandCenterHero() {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-500 ">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-500 animate-pulse">
         <span className="text-xs uppercase tracking-widest">Scroll</span>
         <ArrowRight size={20} className="rotate-90" />
       </div>

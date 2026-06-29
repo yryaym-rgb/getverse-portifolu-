@@ -25,6 +25,7 @@ export default function CommandCenterTestimonials() {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
 
+  // ✅ REAL TESTIMONIALS — Removed MediCare Pro (filler)
   const testimonials: Testimonial[] = [
     {
       id: 1,
@@ -65,27 +66,15 @@ export default function CommandCenterTestimonials() {
       rating: 5,
       project: "JustFly",
       date: "2025"
-    },
-    {
-      id: 5,
-      quote: "Working with Abdul on the healthcare management platform was exceptional. He understood our complex requirements and delivered a solution that our staff actually enjoys using. The analytics dashboard is incredibly insightful.",
-      author: "MediCare Pro",
-      role: "Healthcare Provider",
-      flag: "🏥",
-      rating: 5,
-      project: "MediCare Pro",
-      date: "2025"
     }
   ]
 
   const stats = [
-    { value: '4.9', label: 'Average Rating', icon: <Star size={16} />, color: '#00f0ff' },
     { value: '18+', label: 'Clients Served', icon: <Users size={16} />, color: '#7b2ffc' },
     { value: '5', label: 'Countries', icon: <Globe size={16} />, color: '#ff6b35' },
-    { value: '100%', label: 'Client Satisfaction', icon: <CheckCircle size={16} />, color: '#00f0ff' },
+    // ✅ REMOVED: 4.9/5 Rating, 100% Satisfaction (fabricated)
   ]
 
-  // Intersection Observer for animation trigger
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -103,7 +92,6 @@ export default function CommandCenterTestimonials() {
     return () => observer.disconnect()
   }, [])
 
-  // Auto-play carousel
   useEffect(() => {
     if (!isAutoPlaying) return
 
@@ -117,7 +105,6 @@ export default function CommandCenterTestimonials() {
   const handlePrev = () => {
     setIsAutoPlaying(false)
     setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-    // Resume auto-play after 10 seconds of inactivity
     setTimeout(() => setIsAutoPlaying(true), 10000)
   }
 
@@ -140,7 +127,6 @@ export default function CommandCenterTestimonials() {
   return (
     <section ref={sectionRef} className="py-20 px-4 border-t border-white/5">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/5 text-[#00f0ff] text-sm mb-4">
             <MessageSquare size={14} />
@@ -154,7 +140,6 @@ export default function CommandCenterTestimonials() {
           </p>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {stats.map((stat, i) => (
             <div 
@@ -175,11 +160,8 @@ export default function CommandCenterTestimonials() {
           ))}
         </div>
 
-        {/* Testimonial Carousel */}
         <div className="relative">
-          {/* Main Card */}
           <div className="glass p-8 md:p-12 rounded-3xl border border-white/5 min-h-[280px]">
-            {/* Quote Icon */}
             <div className="flex justify-between items-start mb-6">
               <Quote size={40} className="text-[#00f0ff] opacity-30" />
               <div className="flex items-center gap-1">
@@ -187,12 +169,10 @@ export default function CommandCenterTestimonials() {
               </div>
             </div>
 
-            {/* Quote */}
             <p className="text-xl md:text-2xl text-gray-200 leading-relaxed italic">
               "{testimonials[current].quote}"
             </p>
 
-            {/* Author Info */}
             <div className="mt-6 flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#00f0ff]/20 to-[#7b2ffc]/20 flex items-center justify-center text-2xl">
                 {testimonials[current].flag}
@@ -211,7 +191,6 @@ export default function CommandCenterTestimonials() {
             </div>
           </div>
 
-          {/* Navigation Buttons */}
           <div className="flex justify-center gap-4 mt-8">
             <button
               onClick={handlePrev}
@@ -247,7 +226,6 @@ export default function CommandCenterTestimonials() {
           </div>
         </div>
 
-        {/* Additional Trust Indicators */}
         <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-[#00f0ff]/5 via-[#7b2ffc]/5 to-[#ff6b35]/5 border border-white/5 text-center">
           <div className="flex flex-wrap justify-center gap-6 text-sm">
             <span className="flex items-center gap-2 text-gray-400">

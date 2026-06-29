@@ -82,7 +82,8 @@ export default function Footer() {
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               Building mission-critical AI systems for governments & enterprises. 
-              Trusted by the DRC Presidential Office and national telecom regulators.
+              Sole architect of a national civic platform built for the DRC presidential office's 
+              constitutional reform initiative, and a national tower-mapping system for ARPTC, DRC's telecom regulator.
             </p>
             <div className="flex gap-3">
               {socials.map((social, i) => (

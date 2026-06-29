@@ -59,7 +59,6 @@ export default function CommandCenterTrustBadges() {
     }
   ]
 
-  // Intersection Observer for animation trigger
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -81,17 +80,16 @@ export default function CommandCenterTrustBadges() {
     { value: '6', label: 'Trust Badges', icon: <Award size={16} />, color: '#00f0ff' },
     { value: '5', label: 'Countries', icon: <Globe size={16} />, color: '#7b2ffc' },
     { value: '18+', label: 'Projects', icon: <Building2 size={16} />, color: '#ff6b35' },
-    { value: '100%', label: 'Client Trust', icon: <Shield size={16} />, color: '#00f0ff' },
+    // ✅ REMOVED: 100% Client Trust (fabricated metric)
   ]
 
   return (
     <section ref={sectionRef} className="py-16 px-4 border-t border-white/5 bg-gradient-to-b from-transparent to-[#00f0ff]/[0.02]">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/5 text-[#00f0ff] text-sm mb-4">
             <Shield size={14} />
-            Trusted by Governments & Enterprises
+            Governments & Enterprises I've Built For
           </div>
           <h2 className="text-3xl md:text-4xl font-bold">
             <span className="gradient-text">Trust</span> Credentials
@@ -101,7 +99,6 @@ export default function CommandCenterTrustBadges() {
           </p>
         </div>
 
-        {/* Trust Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {trustStats.map((stat, i) => (
             <div 
@@ -122,7 +119,6 @@ export default function CommandCenterTrustBadges() {
           ))}
         </div>
 
-        {/* Badges Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {badges.map((badge, i) => (
             <div
@@ -136,7 +132,6 @@ export default function CommandCenterTrustBadges() {
               onMouseLeave={() => setHoveredIndex(null)}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
-              {/* Glow Effect */}
               {hoveredIndex === i && (
                 <div 
                   className="absolute inset-0 rounded-2xl opacity-20 transition-opacity duration-500"
@@ -146,7 +141,6 @@ export default function CommandCenterTrustBadges() {
                 />
               )}
 
-              {/* Badge Image */}
               <div className="relative w-12 h-12 mx-auto mb-3">
                 <Image
                   src={badge.icon}
@@ -157,12 +151,10 @@ export default function CommandCenterTrustBadges() {
                 />
               </div>
 
-              {/* Badge Name */}
               <p className="text-white text-xs font-medium text-center group-hover:text-[#00f0ff] transition">
                 {badge.name}
               </p>
 
-              {/* Description (shown on hover) */}
               {badge.description && (
                 <p className={`text-gray-400 text-[10px] text-center mt-1 transition-all duration-300 ${
                   hoveredIndex === i ? 'opacity-100' : 'opacity-0'
@@ -171,15 +163,13 @@ export default function CommandCenterTrustBadges() {
                 </p>
               )}
 
-              {/* Status Indicator */}
               <div className="absolute top-2 right-2">
-                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full " />
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
               </div>
             </div>
           ))}
         </div>
 
-        {/* Trust Message */}
         <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-[#00f0ff]/5 via-[#7b2ffc]/5 to-[#ff6b35]/5 border border-white/5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -188,7 +178,7 @@ export default function CommandCenterTrustBadges() {
               </div>
               <div>
                 <p className="text-white font-medium">
-                  Trusted by Governments & Enterprises Worldwide
+                  Governments & Enterprises I've Built For
                 </p>
                 <p className="text-gray-400 text-sm">
                   Military-grade security, 99.98% uptime, and 18+ production platforms
@@ -204,7 +194,6 @@ export default function CommandCenterTrustBadges() {
           </div>
         </div>
 
-        {/* Additional Trust Indicators */}
         <div className="mt-8 flex flex-wrap justify-center gap-6 text-xs text-gray-500">
           <span className="flex items-center gap-2">
             <CheckCircle size={12} className="text-emerald-400" />
