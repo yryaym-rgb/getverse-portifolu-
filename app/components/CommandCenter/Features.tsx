@@ -124,7 +124,7 @@ export default function CommandCenterFeatures() {
       color: '#00f0ff',
       category: 'Recruiter',
       status: 'Live',
-      stats: [{ label: 'Accuracy', value: '96%' }]
+      stats: [{ label: 'Type', value: 'Demo' }]
     },
     {
       icon: <Mic size={24} />,
@@ -190,7 +190,7 @@ export default function CommandCenterFeatures() {
           { value: '12', label: 'Features', icon: <Zap size={16} />, color: '#00f0ff' },
           { value: '18+', label: 'Projects', icon: <Code size={16} />, color: '#7b2ffc' },
           { value: '5', label: 'Categories', icon: <Globe size={16} />, color: '#ff6b35' },
-          { value: '100%', label: 'AI Powered', icon: <Brain size={16} />, color: '#00f0ff' },
+          { value: 'Local', label: 'Knowledge Base', icon: <Brain size={16} />, color: '#00f0ff' },
         ].map((stat, i) => (
           <div key={i} className="glass p-3 rounded-xl text-center border border-white/5">
             <div className="flex justify-center mb-1" style={{ color: stat.color }}>{stat.icon}</div>
@@ -305,7 +305,7 @@ export default function CommandCenterFeatures() {
       {/* CTA */}
       <div className="glass p-6 rounded-xl border border-[#00f0ff]/10 text-center">
         <p className="text-gray-400 text-sm mb-4">
-          🚀 All features are production-ready and connected to real AI services.
+          Interactive demos powered by a local knowledge base — no API keys required. AI features are clearly labeled.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link 

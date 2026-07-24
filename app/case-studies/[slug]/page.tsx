@@ -10,7 +10,7 @@ import {
   Clock, Users, Target, Award, Zap,
   Code, GitBranch, BarChart3, Sparkles,
   Share2, Bookmark, Heart, Eye,
-  Calendar, User, TrendingUp
+  Calendar, User, TrendingUp, Globe, ExternalLink
 } from 'lucide-react'
 
 const caseStudiesData: Record<string, any> = {
@@ -274,6 +274,56 @@ export default function CaseStudyDetail() {
             <p className="text-white mt-2">{study.solution}</p>
           </div>
         </div>
+
+        {slug === 'maoni' && (
+          <div className="glass p-6 rounded-2xl border border-white/5 mb-8">
+            <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider flex items-center gap-2 mb-4">
+              <Shield size={16} />
+              Live Production Platform
+            </h3>
+            <p className="text-gray-400 text-sm mb-4">
+              MAONI is live at maoni.cd — a national civic consultation platform for DRC constitutional reform.
+            </p>
+            <a
+              href="https://maoni.cd"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg transition"
+            >
+              Visit maoni.cd <ExternalLink size={16} />
+            </a>
+          </div>
+        )}
+
+        {/* Live demo embed for ARPTC */}
+        {slug === 'arptc' && (
+          <div className="glass p-6 rounded-2xl border border-white/5 mb-8">
+            <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider flex items-center gap-2 mb-4">
+              <Globe size={16} />
+              Live Interactive Map
+            </h3>
+            <p className="text-gray-400 text-sm mb-4">
+              Explore the production tower mapping platform — 3,500+ towers across DRC provinces.
+            </p>
+            <div className="relative w-full rounded-xl overflow-hidden border border-white/10" style={{ height: '450px' }}>
+              <iframe
+                src="https://drctowermap.netlify.app"
+                title="ARPTC Tower Map — Live Demo"
+                className="w-full h-full"
+                loading="lazy"
+                allowFullScreen
+              />
+            </div>
+            <a
+              href="https://drctowermap.netlify.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-4 text-[#00f0ff] text-sm hover:underline"
+            >
+              Open full screen <ExternalLink size={14} />
+            </a>
+          </div>
+        )}
 
         {/* Architecture */}
         <div className="glass p-6 rounded-2xl border border-white/5 mb-8">

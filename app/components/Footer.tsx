@@ -31,9 +31,9 @@ export default function Footer() {
   const quickLinks = [
     { label: 'Home', href: '/' },
     { label: 'Projects', href: '/projects' },
-    { label: 'AI Recruiter', href: '/ai-recruiter' },
-    { label: 'Engineering', href: '/engineering' },
+    { label: 'Case Studies', href: '/case-studies' },
     { label: 'Digital Twin', href: '/digital-twin' },
+    { label: 'Resume', href: '/resume' },
     { label: 'About', href: '/about' },
     { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: '/contact' },

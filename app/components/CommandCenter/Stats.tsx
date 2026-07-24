@@ -236,27 +236,9 @@ export default function CommandCenterStats() {
         </div>
 
         <div className="mt-8 p-4 rounded-xl bg-white/5 border border-white/5 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-            <span className="flex items-center gap-2 text-gray-400">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full" />
-              All systems operational
-            </span>
-            <span className="text-gray-600">|</span>
-            <span className="flex items-center gap-2 text-emerald-400">
-              <Shield size={14} />
-              99.98% uptime
-            </span>
-            <span className="text-gray-600">|</span>
-            <span className="flex items-center gap-2 text-[#00f0ff]">
-              <Clock size={14} />
-              Last deployment: 2 hours ago
-            </span>
-            <span className="text-gray-600">|</span>
-            <span className="flex items-center gap-2 text-[#7b2ffc]">
-              <Server size={14} />
-              CI/CD: ✅ Passing
-            </span>
-          </div>
+          <p className="text-sm text-gray-400">
+            Metrics sourced from production platforms — MAONI, ARPTC, Selzara, and client deployments.
+          </p>
         </div>
       </div>
     </section>

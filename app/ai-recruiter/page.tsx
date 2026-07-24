@@ -53,7 +53,6 @@ export default function AIRecruiterDashboard() {
   ]
 
   const stats = [
-    { value: '96%', label: 'Avg Match Score', icon: <Target size={18} />, color: '#00f0ff' },
     { value: '18+', label: 'Projects Analyzed', icon: <Award size={18} />, color: '#7b2ffc' },
     { value: '5', label: 'Countries', icon: <Globe size={18} />, color: '#ff6b35' },
     { value: '4+', label: 'Years Experience', icon: <Clock size={18} />, color: '#00f0ff' },
@@ -172,9 +171,9 @@ export default function AIRecruiterDashboard() {
           {/* Features List */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { icon: <CheckCircle size={16} className="text-emerald-400" />, text: '96% Match Accuracy' },
+              { icon: <CheckCircle size={16} className="text-emerald-400" />, text: 'Local knowledge base' },
               { icon: <CheckCircle size={16} className="text-emerald-400" />, text: '18+ Projects Analyzed' },
-              { icon: <CheckCircle size={16} className="text-emerald-400" />, text: 'Real-time AI Processing' },
+              { icon: <CheckCircle size={16} className="text-emerald-400" />, text: 'Instant demo responses' },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-2 text-gray-300 text-sm">
                 {item.icon}

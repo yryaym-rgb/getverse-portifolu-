@@ -22,8 +22,6 @@ const posts = [
     image: '/images/projects/maoni-dashboard.png',
     tags: ['Government', 'AI', 'Security'],
     featured: true,
-    views: 1247,
-    likes: 89
   },
   {
     title: 'Optimizing API Performance: 2 Minutes to 30 Seconds',
@@ -36,8 +34,6 @@ const posts = [
     image: '/images/projects/justfly-search.png',
     tags: ['Performance', 'Optimization', 'Scraping'],
     featured: false,
-    views: 856,
-    likes: 67
   },
   {
     title: 'Integrating Claude API for Government Systems',
@@ -50,8 +46,6 @@ const posts = [
     image: '/images/projects/selzara-dashboard.png',
     tags: ['AI', 'Claude API', 'Automation'],
     featured: false,
-    views: 723,
-    likes: 54
   },
   {
     title: 'Building a SaaS with Zero Ad Spend: The Selzara Story',
@@ -64,8 +58,6 @@ const posts = [
     image: '/images/projects/selzara-dashboard.png',
     tags: ['SaaS', 'Growth', 'AI'],
     featured: false,
-    views: 634,
-    likes: 42
   },
   {
     title: 'Military-Grade Security for Government Platforms',
@@ -78,8 +70,6 @@ const posts = [
     image: '/images/projects/maoni-dashboard.png',
     tags: ['Security', 'Government', 'Encryption'],
     featured: false,
-    views: 512,
-    likes: 38
   },
   {
     title: 'Web Scraping at Scale: Cloudflare and CAPTCHA Bypass',
@@ -92,8 +82,6 @@ const posts = [
     image: '/images/projects/justfly-search.png',
     tags: ['Scraping', 'Automation', 'Data'],
     featured: false,
-    views: 445,
-    likes: 31
   }
 ]
 
@@ -296,17 +284,7 @@ export default function BlogPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/5">
-                    <div className="flex items-center gap-3 text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Eye size={12} />
-                        {post.views}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Heart size={12} />
-                        {post.likes}
-                      </span>
-                    </div>
+                  <div className="flex items-center justify-end mt-4 pt-4 border-t border-white/5">
                     <span className="text-[#00f0ff] text-sm flex items-center gap-1 group-hover:gap-2 transition">
                       Read <ArrowRight size={14} />
                     </span>

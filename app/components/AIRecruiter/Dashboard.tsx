@@ -40,7 +40,7 @@ export default function AIRecruiterDashboard() {
       gradient: 'from-[#00f0ff]/20 via-[#00f0ff]/5 to-transparent',
       glowColor: '#00f0ff',
       stats: [
-        { label: 'Accuracy', value: '96%' },
+        { label: 'Type', value: 'Demo' },
         { label: 'Projects', value: '18+' }
       ]
     },
@@ -92,7 +92,7 @@ export default function AIRecruiterDashboard() {
   ]
 
   const stats = [
-    { value: '96%', label: 'Avg Match Score', icon: <Target size={18} />, color: '#00f0ff', glow: 'shadow-[#00f0ff]/20' },
+    { value: '18+', label: 'Projects', icon: <Award size={18} />, color: '#00f0ff', glow: 'shadow-[#00f0ff]/20' },
     { value: '18+', label: 'Projects Analyzed', icon: <Award size={18} />, color: '#7b2ffc', glow: 'shadow-[#7b2ffc]/20' },
     { value: '5', label: 'Countries', icon: <Globe size={18} />, color: '#ff6b35', glow: 'shadow-[#ff6b35]/20' },
     { value: '4+', label: 'Years Experience', icon: <Clock size={18} />, color: '#00f0ff', glow: 'shadow-[#00f0ff]/20' },

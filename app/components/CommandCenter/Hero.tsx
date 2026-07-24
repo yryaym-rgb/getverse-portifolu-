@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { 
   Brain, ArrowRight, Sparkles, Github, Linkedin, 
-  Mail, MapPin, Award, Users, Globe, Zap, Shield,
-  Code, Server, Database, Cloud, Terminal
+  Mail, MapPin, Users, Globe, Zap, Shield,
+  Code, Server, Database, Cloud, Terminal, FileText, ExternalLink
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -125,17 +125,37 @@ export default function CommandCenterHero() {
             ))}
           </div>
 
+          {/* Proof strip — immediate credibility */}
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/case-studies/maoni"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00f0ff]/10 border border-[#00f0ff]/20 text-sm text-[#00f0ff] hover:bg-[#00f0ff]/15 transition"
+            >
+              <Shield size={14} />
+              MAONI — DRC Presidential Platform
+              <ExternalLink size={12} />
+            </Link>
+            <Link
+              href="/case-studies/arptc"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#7b2ffc]/10 border border-[#7b2ffc]/20 text-sm text-[#7b2ffc] hover:bg-[#7b2ffc]/15 transition"
+            >
+              <Globe size={14} />
+              ARPTC — 3,500+ Towers Mapped
+              <ExternalLink size={12} />
+            </Link>
+          </div>
+
           <div className="flex flex-wrap gap-4">
-            <Link href="/projects" className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition-all hover:scale-105 flex items-center gap-2">
+            <Link href="/case-studies/maoni" className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition-all hover:scale-105 flex items-center gap-2">
               <Sparkles size={18} />
-              View My Work
+              See the Proof
             </Link>
             <Link href="/contact" className="px-8 py-3.5 rounded-full border border-gray-700 text-white font-semibold hover:border-[#00f0ff] hover:bg-[#00f0ff]/5 transition-all">
               Hire Me
             </Link>
-            <Link href="/digital-twin" className="px-8 py-3.5 rounded-full border border-gray-700 text-white font-semibold hover:border-[#7b2ffc] hover:bg-[#7b2ffc]/5 transition-all flex items-center gap-2">
-              <Brain size={18} />
-              Talk to AI
+            <Link href="/resume" className="px-8 py-3.5 rounded-full border border-gray-700 text-white font-semibold hover:border-[#7b2ffc] hover:bg-[#7b2ffc]/5 transition-all flex items-center gap-2">
+              <FileText size={18} />
+              Resume
             </Link>
           </div>
 
@@ -177,21 +197,20 @@ export default function CommandCenterHero() {
               
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <div className="flex items-center gap-2">
-                  <Award size={18} className="text-[#00f0ff]" />
-                  <span className="text-white font-semibold">Full Stack AI Developer</span>
+                  <Shield size={18} className="text-[#00f0ff]" />
+                  <span className="text-white font-semibold">Government-Trusted Engineer</span>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-gray-300 mt-1">
-                  <span>⭐ 18+ Platforms</span>
-                  <span>🌍 5 Countries</span>
-                  <span>🏛️ Government Trusted</span>
+                  <span>18+ Platforms</span>
+                  <span>5 Countries</span>
+                  <span>DRC Presidential Office</span>
                 </div>
               </div>
 
-              {/* Floating Badge */}
-              <div className="absolute -top-3 -right-3 glass px-3 py-1.5 rounded-full border border-[#00f0ff]/20 shadow-lg">
-                <span className="text-white text-xs font-semibold flex items-center gap-1.5">
-                  <Sparkles size={12} className="text-[#00f0ff]" />
-                  4.9/5 Rating
+              <div className="absolute -top-3 -right-3 glass px-3 py-1.5 rounded-full border border-emerald-500/30 shadow-lg">
+                <span className="text-emerald-400 text-xs font-semibold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                  Available for Hire
                 </span>
               </div>
             </div>
