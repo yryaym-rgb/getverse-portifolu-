@@ -98,12 +98,38 @@ export default function Contact() {
             <MessageSquare size={14} />
             Let's Connect
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold">
-            <span className="gradient-text">Contact</span> Me
+          <h1 className="text-4xl md:text-5xl font-bold font-display">
+            <span className="gradient-text">Book a Meeting</span>
           </h1>
           <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-            Have a project in mind? Let's talk about how I can help bring your vision to life.
+            Schedule a call, send a message, or connect instantly. Available for full-time, contract, and remote work.
           </p>
+        </div>
+      </section>
+
+      {/* Book Meeting Options */}
+      <section className="px-4 max-w-6xl mx-auto pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { icon: <Calendar size={20} />, label: 'Book a Meeting', value: 'Schedule via Calendly', href: 'https://calendly.com', color: '#d4af37', external: true },
+            { icon: <MessageSquare size={20} />, label: 'WhatsApp', value: '+92 328 672 5204', href: 'https://wa.me/923286725204', color: '#25D366', external: true },
+            { icon: <Linkedin size={20} />, label: 'LinkedIn', value: 'Connect professionally', href: 'https://linkedin.com/in/abdul-malik-lakho-19103b292', color: '#0077b5', external: true },
+            { icon: <Clock size={20} />, label: 'Timezone', value: 'PKT (UTC+5)', href: '#', color: '#00f0ff', external: false },
+          ].map((item, i) => (
+            <a
+              key={i}
+              href={item.href}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noopener noreferrer' : undefined}
+              className="glass-card p-5 rounded-2xl border border-white/5 hover:border-[#d4af37]/30 transition text-center group"
+            >
+              <div className="flex justify-center mb-2 transition-transform group-hover:scale-110" style={{ color: item.color }}>
+                {item.icon}
+              </div>
+              <div className="font-semibold text-white text-sm">{item.label}</div>
+              <div className="text-gray-500 text-xs mt-1">{item.value}</div>
+            </a>
+          ))}
         </div>
       </section>
 

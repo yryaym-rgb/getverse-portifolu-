@@ -6,6 +6,7 @@
   --cyan: #00f0ff;
   --purple: #7b2ffc;
   --orange: #ff6b35;
+  --gold: #d4af37;
   --primary: #00f0ff;
   --secondary: #7b2ffc;
   --accent: #ff6b35;
@@ -474,4 +475,46 @@ body {
 }
 .hover\:border-orange:hover {
   border-color: var(--orange);
+}
+
+/* ===== GETVERSE 3.0 PREMIUM ===== */
+.font-display {
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, var(--gold) 0%, #f5e6a3 50%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.aurora-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(0, 240, 255, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(123, 47, 252, 0.08), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 80%, rgba(212, 175, 55, 0.05), transparent);
+  animation: auroraShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes auroraShift {
+  0% { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+
+.magnetic-btn {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.magnetic-btn:hover {
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-bg {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

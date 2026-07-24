@@ -34,6 +34,7 @@ export default function Navigation() {
   const mainNav = [
     { label: 'Work', href: '/projects', icon: <Code size={16} /> },
     { label: 'Case Studies', href: '/case-studies', icon: <FileText size={16} /> },
+    { label: 'Security', href: '/security', icon: <Code size={16} /> },
     { label: 'About', href: '/about', icon: <User size={16} /> },
     { label: 'Contact', href: '/contact', icon: <Mail size={16} /> },
   ]
@@ -55,8 +56,11 @@ export default function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group" aria-label="Home">
-            <div className="hidden sm:block">
-              <img src="/images/logo/logo.png" alt="getverse.dev" className="h-12 w-auto" />
+            <div className="hidden sm:flex items-center gap-2">
+              <div className="w-10 h-10 rounded-xl border border-[#d4af37]/30 bg-black/80 flex items-center justify-center">
+                <span className="text-sm font-bold font-display gradient-text-gold">AL</span>
+              </div>
+              <img src="/images/logo/logo.png" alt="getverse.dev" className="h-10 w-auto" />
             </div>
           </Link>
 
@@ -131,9 +135,9 @@ export default function Navigation() {
             </a>
             <Link
               href="/contact"
-              className="px-5 py-2 rounded-full bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] text-white text-sm font-semibold hover:shadow-lg hover:shadow-[#00f0ff]/25 transition-all duration-300 transform hover:scale-105 hidden sm:block"
+              className="px-5 py-2 rounded-full bg-gradient-to-r from-[#d4af37] to-[#00f0ff] text-black text-sm font-semibold hover:shadow-lg hover:shadow-[#d4af37]/25 transition-all duration-300 transform hover:scale-105 hidden sm:block"
             >
-              Hire Me
+              Book Meeting
             </Link>
 
             <button
