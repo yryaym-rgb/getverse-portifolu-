@@ -4,12 +4,17 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Bot, Sparkles } from 'lucide-react'
 
-const suggestions = ['Experience', 'Projects', 'Resume', 'Architecture', 'Pricing']
+const suggestions = [
+  'What government systems has Abdul built?',
+  "Explain MAONI's architecture",
+  'Show AI projects',
+  'Why should I hire Abdul?',
+]
 
 export default function AIAssistant() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
-    { role: 'assistant', content: "Hi! I'm Abdul's AI assistant. Ask me anything about his experience, projects, architecture, or pricing." },
+    { role: 'assistant', content: "Hi! I'm Abdul's portfolio assistant — trained on his projects, architecture, and experience. Try asking about government systems, MAONI's architecture, or why you should hire him." },
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -34,7 +39,7 @@ export default function AIAssistant() {
         body: JSON.stringify({ messages: allMessages }),
       })
       const data = await res.json()
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.message || 'I can help with experience, projects, resume, architecture, and pricing. What would you like to know?' }])
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.message || 'Ask me about government systems, MAONI architecture, AI projects, or why you should hire Abdul.' }])
     } catch {
       setMessages((prev) => [...prev, { role: 'assistant', content: 'Sorry, I had trouble connecting. Try asking about Abdul\'s government projects or AI experience.' }])
     } finally {
@@ -93,7 +98,7 @@ export default function AIAssistant() {
               {suggestions.map((s) => (
                 <button
                   key={s}
-                  onClick={() => send(`Tell me about ${s.toLowerCase()}`)}
+                  onClick={() => send(s)}
                   className="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-[#00f0ff]/30 transition"
                 >
                   {s}

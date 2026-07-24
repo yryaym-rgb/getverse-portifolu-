@@ -55,7 +55,17 @@ export default function CaseStudyShowcase() {
               </div>
             </div>
 
-            <div className="p-8 space-y-6">
+            <div className="p-8 space-y-5">
+              {'metrics' in study && study.metrics && (
+                <div className="grid grid-cols-3 gap-2 pb-4 border-b border-white/5">
+                  {study.metrics.map((m) => (
+                    <div key={m.label} className="text-center p-2 rounded-lg bg-white/5">
+                      <div className="text-lg font-bold font-display" style={{ color: study.color }}>{m.value}</div>
+                      <div className="text-[10px] text-gray-500 uppercase tracking-wider">{m.label}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
               <DocStep label="Problem" value={study.problem} color="#ff6b35" />
               <DocStep label="Challenge" value={study.challenge} color="#7b2ffc" />
               <DocStep label="Architecture" tags={study.architecture} color="#00f0ff" />

@@ -55,6 +55,13 @@ export default function HeroPremium() {
             <span className="gradient-text-gold">Multiple Countries</span>
           </h1>
 
+          <p className="text-gray-400 text-lg max-w-xl">
+            National-scale platforms with verified metrics —{' '}
+            <span className="text-white font-semibold">22 tables</span>,{' '}
+            <span className="text-white font-semibold">79 RLS policies</span>,{' '}
+            <span className="text-white font-semibold">99.9% uptime</span>.
+          </p>
+
           <div className="flex flex-wrap gap-2">
             {countries.map((c) => (
               <motion.button
@@ -85,7 +92,7 @@ export default function HeroPremium() {
                 transition={{ delay: 0.3 + i * 0.1 }}
                 className="glass-card p-4 rounded-2xl text-center"
               >
-                <div className="text-2xl md:text-3xl font-bold font-display" style={{ color: stat.color }}>
+                <div className="text-2xl md:text-3xl font-bold font-display text-white">
                   {stat.value}
                 </div>
                 <div className="text-gray-400 text-xs mt-1">{stat.label}</div>

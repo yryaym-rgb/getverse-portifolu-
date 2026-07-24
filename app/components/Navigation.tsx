@@ -3,15 +3,17 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Command, Github, Linkedin, Code, Home, FileText, User, Mail } from 'lucide-react'
+import { Menu, X, Command, Github, Linkedin, Code, Home, FileText, User, Mail, Briefcase } from 'lucide-react'
 import CommandPalette from './CommandPalette'
 import LanguageSwitcher from './LanguageSwitcher'
+import { useRecruiterMode } from './Premium/RecruiterMode'
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [showCommand, setShowCommand] = useState(false)
   const pathname = usePathname()
+  const { recruiterMode, toggleRecruiterMode } = useRecruiterMode()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -104,6 +106,19 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={toggleRecruiterMode}
+              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                recruiterMode
+                  ? 'bg-[#d4af37]/20 border border-[#d4af37]/40 text-[#d4af37]'
+                  : 'bg-white/5 border border-white/10 text-gray-400 hover:text-white'
+              }`}
+              title="Simplify for recruiters"
+            >
+              <Briefcase size={14} />
+              Recruiter
+            </button>
+
             <LanguageSwitcher />
 
             <button
@@ -179,6 +194,14 @@ export default function Navigation() {
               >
                 AI Twin
               </Link>
+              <button
+                onClick={() => { toggleRecruiterMode(); setIsOpen(false) }}
+                className={`flex items-center gap-3 w-full text-left transition py-3 px-4 rounded-xl ${
+                  recruiterMode ? 'text-[#d4af37] bg-[#d4af37]/10' : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Briefcase size={16} /> Recruiter Mode {recruiterMode ? '(On)' : ''}
+              </button>
               <Link
                 href="/resume"
                 onClick={() => setIsOpen(false)}

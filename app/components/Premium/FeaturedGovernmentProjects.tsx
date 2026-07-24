@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Shield, ExternalLink, ArrowRight } from 'lucide-react'
 import { projectsData } from '@/app/lib/projectsData'
+import { projectMetrics } from '@/app/lib/portfolioData'
 
 const govProjects = projectsData.filter((p) => p.category === 'Government')
 
@@ -57,6 +58,16 @@ export default function FeaturedGovernmentProjects() {
                       <div key={m.label}>
                         <div className="text-lg font-bold" style={{ color: project.color }}>{m.value}</div>
                         <div className="text-xs text-gray-500">{m.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {projectMetrics[project.slug] && (
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {projectMetrics[project.slug].slice(0, 3).map((m) => (
+                      <div key={m.label} className="p-2 rounded-lg bg-white/5 text-center">
+                        <div className="text-sm font-bold" style={{ color: project.color }}>{m.value}</div>
+                        <div className="text-[10px] text-gray-500">{m.label}</div>
                       </div>
                     ))}
                   </div>
