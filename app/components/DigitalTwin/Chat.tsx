@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { 
+import { getLocalResponse } from '../../lib/responses'
+import { simulateTyping } from '../../lib/simulateTyping'
+import {
   Send, Loader2, Bot, User, Sparkles, 
   Brain, Clock, Code, Server, Shield,
   MessageSquare, Zap, Award, Globe,
@@ -30,11 +32,11 @@ export default function DigitalTwinChat({ className = '', onMessageSent, onMessa
     }
   ])
   const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [conversationCount, setConversationCount] = useState(0)
   const [isTyping, setIsTyping] = useState(false)
+  const [conversationCount, setConversationCount] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const typingCleanupRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -46,41 +48,40 @@ export default function DigitalTwinChat({ className = '', onMessageSent, onMessa
     setConversationCount(userMessages)
   }, [messages])
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return
+  useEffect(() => {
+    return () => typingCleanupRef.current?.()
+  }, [])
+
+  const handleSend = () => {
+    if (!input.trim() || isTyping) return
 
     const userMessage = input.trim()
     setInput('')
     setIsTyping(true)
-    
-    // Add user message
+
     setMessages(prev => [...prev, { role: 'user', content: userMessage, timestamp: new Date() }])
     if (onMessageSent) onMessageSent(userMessage)
 
-    try {
-      const response = await fetch('/api/digital-twin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          messages: [...messages, { role: 'user', content: userMessage }] 
+    const response = getLocalResponse(userMessage)
+    const assistantIndex = messages.length + 1
+
+    setMessages(prev => [...prev, { role: 'assistant', content: '', timestamp: new Date() }])
+
+    typingCleanupRef.current?.()
+    typingCleanupRef.current = simulateTyping(
+      response,
+      (partial) => {
+        setMessages(prev => {
+          const updated = [...prev]
+          updated[assistantIndex] = { role: 'assistant', content: partial, timestamp: new Date() }
+          return updated
         })
-      })
-      
-      const data = await response.json()
-      const assistantMessage = data.message || data.error || "Sorry, I'm having trouble responding. Please email lakho0543@gmail.com directly."
-      
-      setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage, timestamp: new Date() }])
-      if (onMessageReceived) onMessageReceived(assistantMessage)
-    } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: "Sorry, I'm having trouble connecting. Please email lakho0543@gmail.com directly.",
-        timestamp: new Date()
-      }])
-    } finally {
-      setIsTyping(false)
-      setIsLoading(false)
-    }
+      },
+      () => {
+        setIsTyping(false)
+        if (onMessageReceived) onMessageReceived(response)
+      }
+    )
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -213,7 +214,7 @@ export default function DigitalTwinChat({ className = '', onMessageSent, onMessa
             </div>
           </div>
         ))}
-        {isTyping && (
+        {isTyping && messages[messages.length - 1]?.content === '' && (
           <div className="flex justify-start">
             <div className="bg-white/5 p-3 rounded-2xl border border-white/5">
               <Loader2 size={20} className="animate-spin text-[#00f0ff]" />
@@ -256,7 +257,7 @@ export default function DigitalTwinChat({ className = '', onMessageSent, onMessa
           />
           <button
             onClick={handleSend}
-            disabled={isLoading || !input.trim()}
+            disabled={isTyping || !input.trim()}
             className="p-2 bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] rounded-xl text-white hover:shadow-lg hover:shadow-[#00f0ff]/25 transition disabled:opacity-50"
           >
             <Send size={16} />

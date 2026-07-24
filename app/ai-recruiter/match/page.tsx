@@ -119,7 +119,7 @@ export default function JobMatcher() {
           <h1 className="text-4xl font-bold">
             <span className="gradient-text">AI Match</span> Analyzer
           </h1>
-          <p className="text-gray-400 mt-2">Powered by Claude AI — Real-time job matching</p>
+          <p className="text-gray-400 mt-2">Instant job matching — powered by portfolio knowledge</p>
         </div>
 
         <div className="glass p-8 rounded-3xl border border-white/5">

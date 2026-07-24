@@ -114,7 +114,7 @@ export default function StreamingResponse({ onComplete, onProgress }: StreamingR
           </span>
         )}
         <span className="text-gray-600">|</span>
-        <span>Powered by Claude 3.5 Sonnet</span>
+        <span>Powered by local knowledge base</span>
       </div>
     </div>
   )

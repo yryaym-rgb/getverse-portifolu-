@@ -97,7 +97,7 @@ export default function SystemDesigner() {
             <span className="gradient-text">AI</span> System Designer
           </h1>
           <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-            Powered by Claude AI — Describe your system and get a complete architecture with database schema, API design, deployment strategy, and more.
+            Powered by local knowledge base — Describe your system and get a complete architecture with database schema, API design, deployment strategy, and more.
           </p>
         </div>
 

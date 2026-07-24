@@ -3,59 +3,33 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
   try {
     const { users, architecture } = await request.json()
-    
+
     if (!users || !architecture) {
-      return NextResponse.json(
-        { error: 'Please provide users and architecture' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Please provide users and architecture' }, { status: 400 })
     }
 
-    if (!process.env.OPENROUTER_API_KEY) {
-      return NextResponse.json(
-        { error: 'API key not configured' },
-        { status: 500 }
-      )
-    }
+    const userCount = parseInt(users, 10) || 1000
+    const monthly = Math.max(50, Math.round(userCount * 0.05))
 
-    const systemPrompt = `Calculate estimated infrastructure costs for:
-- Users: ${users}
-- Architecture: ${architecture}
-
-Provide:
-1. Monthly infrastructure cost
-2. Annual cost
-3. Cost breakdown (compute, storage, database, CDN, AI services)
-4. Scaling recommendations
-5. Optimization suggestions`
-
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'https://getverse.dev',
-        'X-Title': 'Cost Simulator',
-        'Content-Type': 'application/json'
+    return NextResponse.json({
+      monthlyCost: `$${monthly}/month`,
+      annualCost: `$${monthly * 12}/year`,
+      breakdown: {
+        compute: `$${Math.round(monthly * 0.4)}`,
+        storage: `$${Math.round(monthly * 0.15)}`,
+        database: `$${Math.round(monthly * 0.25)}`,
+        cdn: `$${Math.round(monthly * 0.1)}`,
+        monitoring: `$${Math.round(monthly * 0.1)}`,
       },
-      body: JSON.stringify({
-        model: 'anthropic/claude-3-haiku',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Users: ${users}, Architecture: ${architecture}` }
-        ],
-        temperature: 0.3,
-        max_tokens: 800
-      })
+      recommendations: [
+        'Use reserved instances for 30-40% savings at scale',
+        'Add Redis caching to reduce database load',
+        'CDN for static assets to lower bandwidth costs',
+      ],
+      architecture,
+      users: userCount,
     })
-
-    const data = await response.json()
-    const cost = data.choices?.[0]?.message?.content || 'Unable to calculate costs. Please try again.'
-
-    return NextResponse.json({ cost })
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to calculate costs' },
-      { status: 500 }
-    )
+  } catch {
+    return NextResponse.json({ error: 'Failed to calculate costs' }, { status: 500 })
   }
 }

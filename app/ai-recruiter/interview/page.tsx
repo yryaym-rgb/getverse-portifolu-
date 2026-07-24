@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { getInterviewAnswer } from '../../lib/localApiResponses'
+import { simulateTyping } from '../../lib/simulateTyping'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import { 
@@ -34,6 +36,7 @@ export default function Interview() {
   const [currentAnswer, setCurrentAnswer] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const typingCleanupRef = useRef<(() => void) | null>(null)
 
   const questions: Question[] = [
     {
@@ -134,31 +137,25 @@ export default function Interview() {
     setTimeElapsed(0)
   }
 
-  const handleShowAnswer = async () => {
+  useEffect(() => {
+    return () => typingCleanupRef.current?.()
+  }, [])
+
+  const handleShowAnswer = () => {
     setShowAnswer(true)
     setIsLoading(true)
-    try {
-      const response = await fetch('/api/interview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          question: currentQ.question,
-          context: 'Technical interview for senior engineering role'
-        })
-      })
-      const data = await response.json()
-      if (data.answer) {
-        setCurrentAnswer(data.answer)
-        if (!answers.includes(data.answer)) {
-          setAnswers(prev => [...prev, data.answer])
-        }
+    setCurrentAnswer('')
+
+    const answer = getInterviewAnswer(currentQ.question)
+    typingCleanupRef.current?.()
+    typingCleanupRef.current = simulateTyping(
+      answer,
+      (partial) => setCurrentAnswer(partial),
+      () => {
+        setIsLoading(false)
+        setAnswers(prev => (prev.includes(answer) ? prev : [...prev, answer]))
       }
-    } catch (error) {
-      console.error('Failed to get AI answer', error)
-      setCurrentAnswer('Unable to fetch AI answer. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
+    )
   }
 
   const handleNext = () => {
@@ -221,7 +218,7 @@ export default function Interview() {
           <h1 className="text-4xl font-bold">
             <span className="gradient-text">AI</span> Interview
           </h1>
-          <p className="text-gray-400 mt-2">Powered by Claude AI — Real-time expert answers</p>
+          <p className="text-gray-400 mt-2">Local expert answers — instant responses from portfolio knowledge</p>
         </div>
 
         <div className="glass p-8 rounded-3xl border border-white/5">
@@ -415,7 +412,7 @@ export default function Interview() {
                 <div className="mt-4 p-6 rounded-xl bg-[#00f0ff]/5 border border-[#00f0ff]/20 animate-fadeIn">
                   <div className="flex items-center gap-2 text-[#00f0ff] text-sm font-medium mb-2">
                     <Star size={14} />
-                    Expert Answer (Powered by Claude AI)
+                    Expert Answer (Portfolio Knowledge)
                   </div>
                   <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
                     {currentAnswer}
