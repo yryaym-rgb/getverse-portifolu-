@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, Command, Github, Linkedin, Code, Home, FileText, User, Mail } from 'lucide-react'
 import CommandPalette from './CommandPalette'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
@@ -99,6 +100,8 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+
             <button
               onClick={() => setShowCommand(true)}
               className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm hover:bg-white/10 hover:border-[#00f0ff]/30 transition-all duration-300"

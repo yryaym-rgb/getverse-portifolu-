@@ -77,6 +77,46 @@ export default function CommandCenterFeatures() {
       stats: [{ label: 'Languages', value: '10+' }]
     },
     {
+      icon: <Terminal size={24} />,
+      title: 'Code Playground',
+      desc: 'Run real code from production projects — Sandpack live editor.',
+      href: '/playground',
+      color: '#00f0ff',
+      category: 'Engineering',
+      status: 'Live',
+      stats: [{ label: 'Snippets', value: '3' }]
+    },
+    {
+      icon: <Globe size={24} />,
+      title: '3D Command Center',
+      desc: 'Bruno Simon-level interactive 3D project explorer built with Three.js.',
+      href: '/command-center',
+      color: '#7b2ffc',
+      category: 'Projects',
+      status: 'Live',
+      stats: [{ label: 'Projects', value: '5' }]
+    },
+    {
+      icon: <Network size={24} />,
+      title: 'System Whiteboard',
+      desc: 'Interactive architecture design tool — drag, connect, and design systems.',
+      href: '/whiteboard',
+      color: '#ff6b35',
+      category: 'Engineering',
+      status: 'Live',
+      stats: [{ label: 'Engine', value: 'ReactFlow' }]
+    },
+    {
+      icon: <BarChart3 size={24} />,
+      title: 'Analytics Dashboard',
+      desc: 'Real portfolio traffic insights — page views, referrers, and devices.',
+      href: '/analytics',
+      color: '#00f0ff',
+      category: 'Engineering',
+      status: 'Live',
+      stats: [{ label: 'Metrics', value: '4' }]
+    },
+    {
       icon: <Network size={24} />,
       title: 'Project Universe',
       desc: 'Explore 18+ production projects in an interactive space.',
