@@ -390,21 +390,7 @@ export default function BlogDetail() {
         </div>
 
         {/* Engagement */}
-        <div className="mt-8 pt-8 border-t border-white/5 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-6 text-sm text-gray-400">
-            <span className="flex items-center gap-2">
-              <Eye size={16} />
-              {post.views} views
-            </span>
-            <span className="flex items-center gap-2">
-              <Heart size={16} />
-              {post.likes} likes
-            </span>
-            <span className="flex items-center gap-2">
-              <MessageCircle size={16} />
-              24 comments
-            </span>
-          </div>
+        <div className="mt-8 pt-8 border-t border-white/5 flex flex-wrap items-center justify-end gap-4">
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition text-gray-400 hover:text-white">
               <Heart size={18} />

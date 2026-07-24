@@ -29,17 +29,32 @@ export default function Contact() {
     setLoading(true)
     setError(null)
 
-    // Simulate sending
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    if (Math.random() > 0.1) {
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Failed to send message.')
+        return
+      }
+
+      if (data.method === 'mailto' && data.mailto) {
+        window.location.href = data.mailto
+      }
+
       setSubmitted(true)
       setFormData({ name: '', email: '', subject: '', message: '' })
       setTimeout(() => setSubmitted(false), 5000)
-    } else {
-      setError('Something went wrong. Please try again.')
+    } catch {
+      setError('Network error. Please email lakho0543@gmail.com directly.')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -99,7 +114,7 @@ export default function Contact() {
             { value: '24h', label: 'Response Time', icon: <Clock size={18} />, color: '#00f0ff' },
             { value: '18+', label: 'Projects Delivered', icon: <Award size={18} />, color: '#7b2ffc' },
             { value: '5', label: 'Countries', icon: <Globe size={18} />, color: '#ff6b35' },
-            { value: '100%', label: 'Satisfaction', icon: <Shield size={18} />, color: '#00f0ff' },
+            { value: '4+', label: 'Years Experience', icon: <Shield size={18} />, color: '#00f0ff' },
           ].map((stat, i) => (
             <div key={i} className="glass p-4 rounded-2xl text-center border border-white/5">
               <div className="flex justify-center mb-1" style={{ color: stat.color }}>

@@ -17,7 +17,7 @@ export default function DigitalTwin() {
   const [messages, setMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([
     { 
       role: 'assistant', 
-      content: "👋 Hi, I'm Abdul Malik's AI Digital Twin. I've been trained on his entire portfolio, CV, GitHub, and engineering philosophy.\n\nI think exactly how he would. Ask me anything about system design, architecture, AI, or engineering in general.\n\n💡 Try asking: 'How would you design a voting system?' or 'Explain your engineering philosophy.'" 
+      content: "👋 Hi, I'm Abdul Malik's Digital Twin — a local knowledge base trained on my portfolio, CV, and engineering philosophy.\n\nAsk me about system design, architecture, projects, or how I approach engineering.\n\n💡 Try: 'How would you design a voting system?' or 'Tell me about MAONI.'"
     }
   ])
   const [input, setInput] = useState('')
@@ -117,7 +117,7 @@ export default function DigitalTwin() {
             Talk to <span className="gradient-text">Abdul's AI</span>
           </h1>
           <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-            This AI thinks exactly like I do. Ask about engineering, architecture, system design, or anything.
+            A local knowledge base built from my portfolio — answers instantly, no API keys required.
           </p>
         </div>
       </section>
@@ -155,7 +155,7 @@ export default function DigitalTwin() {
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full " />
-                  <span className="text-[10px] text-gray-400">Trained on 18+ projects</span>
+                  <span className="text-[10px] text-gray-400">Local knowledge base</span>
                   {conversationCount > 0 && (
                     <>
                       <span className="text-gray-600">•</span>
@@ -174,7 +174,7 @@ export default function DigitalTwin() {
                   Clear
                 </button>
               )}
-              <span className="text-xs text-gray-500">🧠 100% knowledge</span>
+              <span className="text-xs text-gray-500">📚 Portfolio knowledge base</span>
             </div>
           </div>
 
@@ -245,7 +245,7 @@ export default function DigitalTwin() {
         {/* Info Footer */}
         <div className="mt-4 text-center text-xs text-gray-500">
           <p>
-            Powered by local knowledge base • Trained on Abdul's CV, Projects, and Engineering Philosophy
+            Powered by local knowledge base • Based on CV, projects, and engineering notes
           </p>
           <p className="mt-1">
             🔒 All conversations are private • No data is stored

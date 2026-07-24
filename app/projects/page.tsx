@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
@@ -10,7 +10,8 @@ import {
   Brain, Shield, Zap, Globe, Users,
   Star, ChevronDown, X, LayoutGrid
 } from 'lucide-react'
-import { getAllProjects, getFeaturedProjects, getAllProjectCategories, Project } from '../lib/projectsData'
+import ProjectGlobe from '../components/Visualizations/ProjectGlobe'
+import { getAllProjects, getAllProjectCategories } from '../lib/projectsData'
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -20,8 +21,13 @@ export default function ProjectsPage() {
   const [showFilters, setShowFilters] = useState(false)
 
   const allProjects = getAllProjects()
-  const featuredProjects = getFeaturedProjects()
   const categories = getAllProjectCategories()
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const q = params.get('search')
+    if (q) setSearchQuery(q)
+  }, [])
 
   const filteredProjects = useMemo(() => {
     let projects = allProjects
@@ -115,6 +121,19 @@ export default function ProjectsPage() {
           <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
             Every platform I've built — from government systems to AI SaaS, fintech, and healthcare.
           </p>
+        </div>
+      </section>
+
+      {/* Global reach visualization */}
+      <section className="px-4 max-w-7xl mx-auto pb-8">
+        <div className="glass p-6 rounded-2xl border border-white/5 flex flex-col md:flex-row items-center gap-8">
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-xl font-bold text-white">Projects Across <span className="gradient-text">5 Countries</span></h2>
+            <p className="text-gray-400 text-sm mt-2">
+              From DRC government platforms to Nigerian travel tech and US SaaS — real production systems worldwide.
+            </p>
+          </div>
+          <ProjectGlobe />
         </div>
       </section>
 

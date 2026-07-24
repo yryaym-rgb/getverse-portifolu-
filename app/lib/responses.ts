@@ -14,7 +14,7 @@ export const responses: Record<string, string> = {
 
   // About
   'who are you':
-    "I'm Abdul Malik Lakho, an AI Developer & Full-Stack Engineer with 2+ years of experience. I build production-grade applications for clients worldwide.",
+    "I'm Abdul Malik Lakho, an AI Developer & Full-Stack Engineer with 4+ years of experience. I build production-grade applications for clients worldwide.",
   'about me':
     "I'm Abdul Malik Lakho from Sukkur, Pakistan. I specialize in AI SaaS, government platforms, and business automation. I've served clients in USA, Nigeria, and DRC.",
   about:
@@ -85,7 +85,7 @@ export const responses: Record<string, string> = {
 
   // Experience
   experience:
-    '2+ years experience\n15+ projects shipped\n3 countries served (USA, Nigeria, DRC)\n457 daily visitors on Selzara\n10+ government level projects\n40 hours available per week',
+    '4+ years experience\n18+ projects shipped\n5 countries served\n457 daily visitors on Selzara\nGovernment platforms for DRC\nAvailable for full-time and contract work',
   'years of experience':
     'I have 4+ years of professional development experience, with 18+ production platforms shipped across government, SaaS, and enterprise clients.',
   government:
