@@ -14,7 +14,11 @@ module.exports = {
         dark: '#0a0a0f',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['var(--font-inter)', 'var(--font-ibm-plex)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-space-grotesk)', 'var(--font-inter)', 'sans-serif'],
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
     },
   },

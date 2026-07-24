@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Space_Grotesk, IBM_Plex_Sans } from 'next/font/google'
 import JsonLd from './components/JsonLd'
 import { LocaleProvider } from './components/LocaleProvider'
+import PremiumProviders from './components/Premium/Providers'
 import './globals.css'
 
 const inter = Inter({
@@ -10,6 +11,20 @@ const inter = Inter({
   variable: '--font-inter',
   preload: true,
   fallback: ['system-ui', 'sans-serif'],
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+  weight: ['400', '500', '600', '700'],
+})
+
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-ibm-plex',
+  weight: ['400', '500', '600'],
 })
 
 export const metadata: Metadata = {
@@ -21,7 +36,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    'Building mission-critical AI systems for governments & enterprises. Trusted by the DRC Presidential Office. 4+ years, 18+ platforms, 5 countries.',
+    'Building AI systems, government platforms & enterprise software used across multiple countries. 18+ production systems, 5+ countries, trusted by DRC Presidential Office.',
 
   keywords: [
     'AI Developer',
@@ -36,8 +51,6 @@ export const metadata: Metadata = {
     'Next.js',
     'Machine Learning',
     'Web Development',
-    'Fintech',
-    'Healthcare',
     'Government Technology',
   ],
 
@@ -64,7 +77,7 @@ export const metadata: Metadata = {
     siteName: 'Abdul Malik Lakho | AI Engineering Command Center',
     title: 'Abdul Malik Lakho | Full Stack AI Developer',
     description:
-      'Building mission-critical AI systems for governments & enterprises. Trusted by the DRC Presidential Office.',
+      'Building AI systems, government platforms & enterprise software used across multiple countries.',
     images: [
       {
         url: '/images/social/og-image.png',
@@ -80,7 +93,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Abdul Malik Lakho | Full Stack AI Developer',
     description:
-      'Building mission-critical AI systems for governments & enterprises. Trusted by the DRC Presidential Office.',
+      'Building AI systems, government platforms & enterprise software used across multiple countries.',
     images: ['/images/social/og-image.png'],
     creator: '@LakhoMalik58424',
     site: '@LakhoMalik58424',
@@ -129,16 +142,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${ibmPlexSans.variable}`}>
       <head>
         <link rel="preload" href="/images/hero/profile.jpg" as="image" type="image/jpeg" />
         <link rel="preload" href="/images/logo/logo.png" as="image" type="image/png" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <JsonLd />
       </head>
-      <body className="bg-black text-white antialiased">
+      <body className="bg-black text-white antialiased font-sans">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#00f0ff] focus:text-black focus:font-semibold"
@@ -146,7 +156,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to main content
         </a>
         <LocaleProvider>
-          {children}
+          <PremiumProviders>
+            {children}
+          </PremiumProviders>
         </LocaleProvider>
       </body>
     </html>
