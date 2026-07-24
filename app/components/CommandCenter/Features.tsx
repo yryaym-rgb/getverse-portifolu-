@@ -180,7 +180,7 @@ export default function CommandCenterFeatures() {
         </h2>
         <p className="text-gray-400 mt-2 max-w-2xl mx-auto">
           Each feature demonstrates a different aspect of my engineering ability.
-          Built with Next.js, Tailwind CSS, and OpenRouter AI.
+          Built with Next.js, Tailwind CSS, and local AI responses.
         </p>
       </div>
 

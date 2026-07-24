@@ -275,7 +275,7 @@ export default function EngineeringLabPage() {
             <div>
               <p className="text-white text-sm font-medium">AI Models Powered by Claude</p>
               <p className="text-gray-400 text-xs mt-1">
-                All tests are powered by Claude AI through OpenRouter. 
+                All tests are powered by local knowledge — no external API required.
                 Results are simulated for demonstration purposes.
               </p>
             </div>

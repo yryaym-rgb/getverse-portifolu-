@@ -163,7 +163,6 @@ export default function RootLayout({
         />
         
         {/* DNS Prefetch */}
-        <link rel="dns-prefetch" href="https://openrouter.ai" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         
         {/* Preconnect */}

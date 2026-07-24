@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import { getLocalResponse } from '../lib/responses'
+import { simulateTyping } from '../lib/simulateTyping'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import { 
@@ -19,9 +21,10 @@ export default function DigitalTwin() {
     }
   ])
   const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
   const [conversationCount, setConversationCount] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const typingCleanupRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -33,30 +36,35 @@ export default function DigitalTwin() {
     setConversationCount(userMessages)
   }, [messages])
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return
+  useEffect(() => {
+    return () => typingCleanupRef.current?.()
+  }, [])
+
+  const handleSend = () => {
+    if (!input.trim() || isTyping) return
 
     const userMessage = input.trim()
     setInput('')
     setMessages(prev => [...prev, { role: 'user', content: userMessage }])
-    setIsLoading(true)
+    setIsTyping(true)
 
-    try {
-      const response = await fetch('/api/digital-twin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, { role: 'user', content: userMessage }] })
-      })
-      const data = await response.json()
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message || data.error }])
-    } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: "Sorry, I'm having trouble connecting. Please email lakho0543@gmail.com directly." 
-      }])
-    } finally {
-      setIsLoading(false)
-    }
+    const response = getLocalResponse(userMessage)
+    const assistantIndex = messages.length + 1
+
+    setMessages(prev => [...prev, { role: 'assistant', content: '' }])
+
+    typingCleanupRef.current?.()
+    typingCleanupRef.current = simulateTyping(
+      response,
+      (partial) => {
+        setMessages(prev => {
+          const updated = [...prev]
+          updated[assistantIndex] = { role: 'assistant', content: partial }
+          return updated
+        })
+      },
+      () => setIsTyping(false)
+    )
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -183,7 +191,7 @@ export default function DigitalTwin() {
                 </div>
               </div>
             ))}
-            {isLoading && (
+            {isTyping && messages[messages.length - 1]?.content === '' && (
               <div className="flex justify-start">
                 <div className="bg-white/5 p-3 rounded-2xl">
                   <Loader2 size={20} className="animate-spin text-[#00f0ff]" />
@@ -225,7 +233,7 @@ export default function DigitalTwin() {
               />
               <button
                 onClick={handleSend}
-                disabled={isLoading || !input.trim()}
+                disabled={isTyping || !input.trim()}
                 className="p-2 bg-gradient-to-r from-[#00f0ff] to-[#7b2ffc] rounded-xl text-white hover:shadow-lg hover:shadow-[#00f0ff]/25 transition disabled:opacity-50"
               >
                 <Send size={16} />
@@ -237,7 +245,7 @@ export default function DigitalTwin() {
         {/* Info Footer */}
         <div className="mt-4 text-center text-xs text-gray-500">
           <p>
-            Powered by Claude 3.5 Sonnet • Trained on Abdul's CV, Projects, and Engineering Philosophy
+            Powered by local knowledge base • Trained on Abdul's CV, Projects, and Engineering Philosophy
           </p>
           <p className="mt-1">
             🔒 All conversations are private • No data is stored

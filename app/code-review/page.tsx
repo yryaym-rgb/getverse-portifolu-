@@ -106,7 +106,7 @@ export default function CodeReview() {
             <span className="gradient-text">AI</span> Code Review
           </h1>
           <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
-            Powered by Claude AI — Paste your code for AI-powered review with security audit, bug detection, and optimization suggestions.
+            Powered by local analysis — Paste your code for review with security audit, bug detection, and optimization suggestions.
           </p>
         </div>
 
