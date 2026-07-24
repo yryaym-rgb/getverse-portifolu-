@@ -2,16 +2,26 @@
 
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
+import StatCard from '../../components/ui/StatCard'
+import { architectureDiagrams } from '../../lib/architectureDiagrams'
 import { 
   ArrowLeft, CheckCircle, ArrowRight, 
-  Server, Database, Cloud, Brain, Shield,
+  Server, Brain, Shield,
   Clock, Users, Target, Award, Zap,
-  Code, GitBranch, BarChart3, Sparkles,
-  Share2, Bookmark, Heart, Eye,
-  Calendar, User, TrendingUp, Globe, ExternalLink
+  Code, ExternalLink, Globe
 } from 'lucide-react'
+
+const ScreenshotCarousel = dynamic(() => import('../../components/ui/ScreenshotCarousel'), { ssr: false })
+const MermaidDiagram = dynamic(() => import('../../components/MermaidDiagram'), { ssr: false })
+
+const maoniSlides = [
+  { src: '/images/projects/maoni-dashboard.png', alt: 'MAONI dashboard', caption: 'Presidential consultation dashboard — real-time citizen proposals' },
+  { src: '/images/projects/maoni-dashboard.png', alt: 'MAONI citizen view', caption: 'Citizen portal — submit proposals and track constitutional reform' },
+  { src: '/images/projects/maoni-dashboard.png', alt: 'MAONI admin panel', caption: 'Hidden multi-role admin panel with full audit logging' },
+]
 
 const caseStudiesData: Record<string, any> = {
   maoni: {
@@ -241,11 +251,22 @@ export default function CaseStudyDetail() {
           <p className="text-gray-400 text-lg mt-2">{study.subtitle}</p>
         </div>
 
-        {/* Featured Image */}
+        {/* MAONI Video Walkthrough / Carousel */}
+        {slug === 'maoni' && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-white mb-2">Platform Walkthrough</h2>
+            <p className="text-gray-400 text-sm mb-4">60-second tour of the presidential-grade citizen consultation system.</p>
+            <ScreenshotCarousel slides={maoniSlides} />
+          </div>
+        )}
+
+        {/* Featured Image (non-MAONI) */}
+        {slug !== 'maoni' && (
         <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden mb-8">
           <img src={study.image} alt={study.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
         </div>
+        )}
 
         {/* Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -298,21 +319,26 @@ export default function CaseStudyDetail() {
         {/* Live demo embed for ARPTC */}
         {slug === 'arptc' && (
           <div className="glass p-6 rounded-2xl border border-white/5 mb-8">
-            <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider flex items-center gap-2 mb-4">
+            <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider flex items-center gap-2 mb-2">
               <Globe size={16} />
-              Live Interactive Map
+              3,500+ Towers Mapped
             </h3>
             <p className="text-gray-400 text-sm mb-4">
-              Explore the production tower mapping platform — 3,500+ towers across DRC provinces.
+              Explore the production tower mapping platform — live data across all DRC provinces.
             </p>
-            <div className="relative w-full rounded-xl overflow-hidden border border-white/10" style={{ height: '450px' }}>
+            <div className="relative w-full rounded-xl overflow-hidden border border-white/10 aspect-video">
               <iframe
                 src="https://drctowermap.netlify.app"
                 title="ARPTC Tower Map — Live Demo"
-                className="w-full h-full"
+                className="w-full h-full absolute inset-0"
                 loading="lazy"
                 allowFullScreen
               />
+            </div>
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              <StatCard label="Total Towers" value="3,500+" color="#7b2ffc" />
+              <StatCard label="Coverage" value="85%" color="#00f0ff" />
+              <StatCard label="Live Updates" value="24/7" color="#ff6b35" />
             </div>
             <a
               href="https://drctowermap.netlify.app"
@@ -325,7 +351,14 @@ export default function CaseStudyDetail() {
           </div>
         )}
 
-        {/* Architecture */}
+        {/* Architecture Diagram */}
+        {architectureDiagrams[slug] && (
+          <div className="mb-8">
+            <MermaidDiagram code={architectureDiagrams[slug]} title="System Architecture" />
+          </div>
+        )}
+
+        {/* Architecture List */}
         <div className="glass p-6 rounded-2xl border border-white/5 mb-8">
           <h3 className="text-sm font-bold text-[#00f0ff] uppercase tracking-wider flex items-center gap-2 mb-3">
             <Server size={16} />

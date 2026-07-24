@@ -1,0 +1,23 @@
+{
+  "nav": {
+    "home": "Home",
+    "work": "Work",
+    "caseStudies": "Case Studies",
+    "about": "About",
+    "contact": "Contact",
+    "aiTwin": "AI Twin",
+    "playground": "Playground",
+    "commandCenter": "3D Center",
+    "whiteboard": "Whiteboard",
+    "analytics": "Analytics",
+    "hireMe": "Hire Me"
+  },
+  "hero": {
+    "title": "AI Developer & Full-Stack Engineer",
+    "subtitle": "Building mission-critical AI systems for governments & enterprises",
+    "cta": "View My Work"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  }
+}
